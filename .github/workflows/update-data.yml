@@ -1,0 +1,22 @@
+name: Update Data
+
+on:
+  repository_dispatch:
+    types: [update-data]
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Update data.json
+        run: |
+          echo '${{ toJson(github.event.client_payload) }}' > data.json
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add data.json
+          git commit -m 'Update data.json via dispatch'
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
