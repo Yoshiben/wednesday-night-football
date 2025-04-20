@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wednesday Night Football - Match History ⚽</title>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.22.5/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="root">
+    <p>Loading Match History... If this persists, check the browser console for errors.</p>
+  </div>
+  <script type="text/babel">
+    console.log('History script is running!');
+
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [matches, setMatches] = useState([]);
+      const [players, setPlayers] = useState([]);
+
+      // Fetch data from GitHub on mount
+      useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await fetch('data.json');
+            if (response.ok) {
+              const data = await response.json();
+              console.log('Fetched data from GitHub:', data);
+              if (data.players) {
+                setPlayers(data.players.map(player => ({
+                  name: player.name,
+                  points: player.points || 0,
+                  games: player.games || 0,
+                  wins: player.wins || 0,
+                  draws: player.draws || 0,
+                  losses: player.losses || 0,
+                  motmAwards: player.motmAwards || 0
+                })));
+              }
+              if (data.matches) {
+                setMatches(data.matches);
+              }
+            } else {
+              console.log('No data.json found, using localStorage');
+            }
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+
+          // Fallback to localStorage
+          const savedPlayers = localStorage.getItem('players');
+          const savedMatches = localStorage.getItem('matches');
+          if (savedPlayers) {
+            setPlayers(JSON.parse(savedPlayers));
+            console.log('Loaded players from localStorage:', JSON.parse(savedPlayers));
+          }
+          if (savedMatches) {
+            setMatches(JSON.parse(savedMatches));
+            console.log('Loaded matches from localStorage:', JSON.parse(savedMatches));
+          }
+        };
+        fetchData();
+      }, []);
+
+      // Log matches and players for debugging
+      useEffect(() => {
+        console.log('Current matches:', matches);
+        console.log('Current players:', players);
+      }, [matches, players]);
+
+      // Calculate MOTM leaderboard
+      const motmLeaderboard = [...players]
+        .filter(player => player.motmAwards > 0)
+        .sort((a, b) => b.motmAwards - a.motmAwards || a.name.localeCompare(b.name));
+      const maxMotmAwards = motmLeaderboard.length > 0 ? motmLeaderboard[0].motmAwards : 0;
+
+      return (
+        <div className="container mx-auto p-4 max-w-2xl">
+          <h1 className="text-3xl font-bold mb-6 text-center">Wednesday Night Football - Match History ⚽</h1>
+
+          {/* Back to Main App */}
+          <div className="mb-8">
+            <a
+              href="./index.html"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 inline-block"
+            >
+              Back to Main App
+            </a>
+          </div>
+
+          {/* MOTM Awards */}
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-2">MOTM Awards</h2>
+            {motmLeaderboard.length === 0 ? (
+              <p>No MOTM awards yet.</p>
+            ) : (
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-200">
+                    <th className="border p-2">Player</th>
+                    <th className="border p-2">MOTM Awards</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {motmLeaderboard.map(player => (
+                    <tr
+                      key={player.name}
+                      className={player.motmAwards === maxMotmAwards ? 'bg-yellow-200' : ''}
+                    >
+                      <td className="border p-2">
+                        {player.motmAwards === maxMotmAwards ? `🏆 ${player.name}` : player.name}
+                      </td>
+                      <td className="border p-2">{player.motmAwards}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+
+          {/* Match History Table */}
+          <div>
+            <h2 className="text-xl font-semibold mb-2">Match History</h2>
+            {matches.length === 0 ? (
+              <p>No matches logged yet.</p>
+            ) : (
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-200">
+                    <th className="border p-2">Date</th>
+                    <th className="border p-2">Blacks</th>
+                    <th className="border p-2">Greens</th>
+                    <th className="border p-2">Result</th>
+                    <th className="border p-2">MOTM</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {matches.map((match, index) => (
+                    <tr key={index}>
+                      <td className="border p-2">{match.date}</td>
+                      <td className="border p-2">{match.blacks.join(', ')}</td>
+                      <td className="border p-2">{match.greens.join(', ')}</td>
+                      <td className="border p-2">
+                        {match.result === 'blacks' ? 'Blacks Win' :
+                         match.result === 'greens' ? 'Greens Win' : 'Draw'}
+                      </td>
+                      <td className="border p-2">{match.motm || 'None'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    class ErrorBoundary extends React.Component {
+      state = { hasError: false };
+      static getDerivedStateFromError(error) {
+        return { hasError: true };
+      }
+      render() {
+        if (this.state.hasError) {
+          return <h1>Something went wrong. Check the console for details.</h1>;
+        }
+        return this.props.children;
+      }
+    }
+
+    // Use createRoot for React 18
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    );
+  </script>
+</body>
+</html>
