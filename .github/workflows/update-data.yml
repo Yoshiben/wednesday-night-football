@@ -16,17 +16,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
       - name: Update data.json
         run: |
-          echo "Inputs received: players=${{ inputs.players }}"
-          echo "Inputs received: matches=${{ inputs.matches }}"
-          # Validate JSON inputs
-          echo "${{ inputs.players }}" | jq . > /dev/null || { echo "Invalid players JSON"; exit 1; }
-          echo "${{ inputs.matches }}" | jq . > /dev/null || { echo "Invalid matches JSON"; exit 1; }
-          # Write JSON to data.json using printf to handle quotes
-          printf '{"players": %s, "matches": %s}' "${{ inputs.players }}" "${{ inputs.matches }}" > data.json
+          node -e "const fs = require('fs'); fs.writeFileSync('data.json', JSON.stringify({players: ${{ inputs.players }}, matches: ${{ inputs.matches }}}, null, 2));"
           cat data.json
           git config --global user.name 'GitHub Action'
           git config --global user.email 'action@github.com'
