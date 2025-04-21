@@ -20,15 +20,22 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16'
+      - name: Write inputs to temporary files
+        run: |
+          cat <<EOF > players.json
+          ${{ inputs.players }}
+          EOF
+          cat <<EOF > matches.json
+          ${{ inputs.matches }}
+          EOF
+          cat players.json
+          cat matches.json
       - name: Update data.json
-        env:
-          PLAYERS_JSON: ${{ inputs.players }}
-          MATCHES_JSON: ${{ inputs.matches }}
         run: |
           node -e "
             const fs = require('fs');
-            const players = JSON.parse(process.env.PLAYERS_JSON);
-            const matches = JSON.parse(process.env.MATCHES_JSON);
+            const players = JSON.parse(fs.readFileSync('players.json', 'utf8'));
+            const matches = JSON.parse(fs.readFileSync('matches.json', 'utf8'));
             fs.writeFileSync('data.json', JSON.stringify({ players, matches }, null, 2));
           "
           cat data.json
