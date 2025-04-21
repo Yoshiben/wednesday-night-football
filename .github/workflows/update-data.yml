@@ -16,13 +16,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
       - name: Update data.json
         run: |
-          node -e "const fs = require('fs'); fs.writeFileSync('data.json', JSON.stringify({players: ${{ inputs.players }}, matches: ${{ inputs.matches }}}, null, 2));"
+          python3 -c "import json; with open('data.json', 'w') as f: json.dump({'players': ${{ inputs.players }}, 'matches': ${{ inputs.matches }}}, f, indent=2)"
           cat data.json
           git config --global user.name 'GitHub Action'
           git config --global user.email 'action@github.com'
