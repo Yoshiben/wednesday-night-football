@@ -12,7 +12,7 @@
 </head>
 <body>
   <div id="root">
-    <p>Loading Wednesday Night Football... If this persists, check the browser console for errors.</p>
+    <p>Loading Wednesday Night Football... If this persists, check the console for errors.</p>
   </div>
   <script type="text/babel">
     console.log('Script is running!');
@@ -31,7 +31,7 @@
     };
 
     // Hardcoded hashed password
-    const HASHED_PASSWORD = '515936937'; // Hashed password provided by user
+    const HASHED_PASSWORD = '515936937';
 
     const App = () => {
       const [players, setPlayers] = useState(() => {
@@ -85,7 +85,6 @@
             console.error('Error fetching data:', error);
           }
 
-          // Fallback to localStorage
           const savedPlayers = localStorage.getItem('players');
           const savedMatches = localStorage.getItem('matches');
           if (savedPlayers) {
@@ -149,7 +148,7 @@
         setGreens(prev => prev.filter(p => p !== player));
       };
 
-      // Log a match and trigger proxy dispatch
+      // Log a match and trigger Vercel API
       const logMatch = async (e) => {
         e.preventDefault();
         console.log('Logging match:', { blacks, greens, result, motm });
@@ -217,7 +216,6 @@
           });
         }
 
-        // Update MOTM awards
         if (motm) {
           const motmPlayer = updatedPlayers.find(pl => pl.name === motm);
           if (motmPlayer) {
@@ -238,34 +236,29 @@
         setGreenPlayers([]);
         setError('');
 
-        // Trigger proxy dispatch
+        // Call Vercel API
         try {
-          const repoOwner = 'Yoshiben';
-          const repoName = 'wednesday-night-football';
-          const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/dispatches`, {
+          const response = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
             method: 'POST',
             headers: {
-              Accept: 'application/vnd.github.v3+json'
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              event_type: 'proxy-dispatch',
-              client_payload: {
-                players: updatedPlayers,
-                matches: updatedMatches,
-                passwordHash: hashPassword(password)
-              }
+              password,
+              players: updatedPlayers,
+              matches: updatedMatches
             })
           });
+          const data = await response.json();
           if (response.ok) {
-            console.log('Triggered proxy dispatch to update data.json');
+            console.log('Triggered workflow via Vercel API');
           } else {
-            const errorData = await response.json();
-            console.error('Failed to trigger proxy dispatch:', errorData);
-            setError(`Failed to update data on GitHub: ${errorData.message}`);
+            console.error('Failed to trigger workflow:', data);
+            setError(`Failed to update data: ${data.error}`);
           }
         } catch (error) {
-          console.error('Error triggering proxy dispatch:', error);
-          setError('Error updating data on GitHub');
+          console.error('Error calling Vercel API:', error);
+          setError('Error updating data');
         }
       };
 
@@ -588,34 +581,29 @@
                 localStorage.removeItem('players');
                 localStorage.removeItem('matches');
 
-                // Trigger proxy dispatch for reset
+                // Call Vercel API for reset
                 try {
-                  const repoOwner = 'Yoshiben';
-                  const repoName = 'wednesday-night-football';
-                  const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/dispatches`, {
+                  const response = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
                     method: 'POST',
                     headers: {
-                      Accept: 'application/vnd.github.v3+json'
+                      'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                      event_type: 'proxy-dispatch',
-                      client_payload: {
-                        players: resetPlayers,
-                        matches: [],
-                        passwordHash: hashPassword(password)
-                      }
+                      password,
+                      players: resetPlayers,
+                      matches: []
                     })
                   });
+                  const data = await response.json();
                   if (response.ok) {
-                    console.log('Triggered proxy dispatch to reset data.json');
+                    console.log('Triggered workflow via Vercel API for reset');
                   } else {
-                    const errorData = await response.json();
-                    console.error('Failed to trigger proxy dispatch:', errorData);
-                    setError(`Failed to reset data on GitHub: ${errorData.message}`);
+                    console.error('Failed to trigger workflow:', data);
+                    setError(`Failed to reset data: ${data.error}`);
                   }
                 } catch (error) {
-                  console.error('Error triggering proxy dispatch:', error);
-                  setError('Error resetting data on GitHub');
+                  console.error('Error calling Vercel API:', error);
+                  setError('Error resetting data');
                 }
               }}
               className="bg-red-500 text-white px-1 py-0.5 text-xs rounded hover:bg-red-600"
@@ -640,7 +628,6 @@
       }
     }
 
-    // Use createRoot for React 18
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(
       <ErrorBoundary>
