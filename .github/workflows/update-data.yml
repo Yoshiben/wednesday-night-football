@@ -1,8 +1,14 @@
 name: Update Data
 
 on:
-  repository_dispatch:
-    types: [update-data]
+  workflow_dispatch:
+    inputs:
+      players:
+        description: 'Updated players data'
+        required: true
+      matches:
+        description: 'Updated matches data'
+        required: true
 
 jobs:
   update-data:
@@ -12,11 +18,11 @@ jobs:
         uses: actions/checkout@v3
       - name: Update data.json
         run: |
-          echo '${{ toJson(github.event.client_payload) }}' > data.json
+          echo "{\"players\": ${{ inputs.players }}, \"matches\": ${{ inputs.matches }}}" > data.json
           git config --global user.name 'GitHub Action'
           git config --global user.email 'action@github.com'
           git add data.json
-          git commit -m 'Update data.json via dispatch'
+          git commit -m 'Update data.json via workflow_dispatch'
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
