@@ -2,54 +2,54 @@
   "players": [
     {
       "name": "Bailey Fulton",
-      "points": 2,
-      "games": 1,
-      "wins": 1,
+      "points": 4,
+      "games": 2,
+      "wins": 2,
       "draws": 0,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Ben Attle",
-      "points": 2,
-      "games": 1,
-      "wins": 1,
+      "points": 4,
+      "games": 2,
+      "wins": 2,
       "draws": 0,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Bradley Travis",
-      "points": 2,
-      "games": 1,
-      "wins": 1,
+      "points": 4,
+      "games": 2,
+      "wins": 2,
       "draws": 0,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Chad Ogden",
-      "points": 2,
-      "games": 1,
-      "wins": 1,
+      "points": 4,
+      "games": 2,
+      "wins": 2,
       "draws": 0,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Craig Ingham",
-      "points": 2,
-      "games": 1,
-      "wins": 1,
+      "points": 4,
+      "games": 2,
+      "wins": 2,
       "draws": 0,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Danny Minshull",
-      "points": 0,
-      "games": 1,
-      "wins": 0,
+      "points": 2,
+      "games": 2,
+      "wins": 1,
       "draws": 0,
       "losses": 1,
       "motmAwards": 0
@@ -120,19 +120,19 @@
     {
       "name": "Kyle Carrington",
       "points": 0,
-      "games": 1,
+      "games": 2,
       "wins": 0,
       "draws": 0,
-      "losses": 1,
-      "motmAwards": 0
+      "losses": 2,
+      "motmAwards": 1
     },
     {
       "name": "Leon Khan",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     },
     {
@@ -156,37 +156,37 @@
     {
       "name": "Sohrob Rostampour",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Tom Kelton",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Tom Wright",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Zach Murphy",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     }
   ],
@@ -210,6 +210,27 @@
       ],
       "result": "blacks",
       "motm": "Joe Kinnear",
+      "date": "4/21/2025"
+    },
+    {
+      "blacks": [
+        "Sohrob Rostampour",
+        "Tom Kelton",
+        "Tom Wright",
+        "Zach Murphy",
+        "Kyle Carrington",
+        "Leon Khan"
+      ],
+      "greens": [
+        "Bradley Travis",
+        "Chad Ogden",
+        "Craig Ingham",
+        "Bailey Fulton",
+        "Ben Attle",
+        "Danny Minshull"
+      ],
+      "result": "greens",
+      "motm": "Kyle Carrington",
       "date": "4/21/2025"
     }
   ]
