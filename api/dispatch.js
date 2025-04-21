@@ -1,6 +1,16 @@
 const fetch = require('node-fetch');
 
 module.exports = async (req, res) => {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', 'https://yoshiben.github.io');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   const { password, players, matches } = req.body;
   const HASHED_PASSWORD = '515936937';
   const PAT = process.env.DISPATCH_TOKEN;
