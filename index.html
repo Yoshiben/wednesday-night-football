@@ -39,6 +39,8 @@
         return defaultPlayers.map(name => ({
           name,
           points: 0,
+          goals: 0,
+          assists: 0,
           games: 0,
           wins: 0,
           draws: 0,
@@ -70,6 +72,8 @@
                 const fetchedPlayers = data.players.map(player => ({
                   name: player.name,
                   points: player.points || 0,
+                  goals: player.goals || 0,
+                  assists: player.assists || 0,
                   games: player.games || 0,
                   wins: player.wins || 0,
                   draws: player.draws || 0,
@@ -84,6 +88,8 @@
                 const defaultPlayerData = defaultPlayers.map(name => ({
                   name,
                   points: 0,
+                  goals: 0,
+                  assists: 0,
                   games: 0,
                   wins: 0,
                   draws: 0,
@@ -114,6 +120,8 @@
                 const defaultPlayerData = defaultPlayers.map(name => ({
                   name,
                   points: 0,
+                  goals: 0,
+                  assists: 0,
                   games: 0,
                   wins: 0,
                   draws: 0,
@@ -144,6 +152,8 @@
               const defaultPlayerData = defaultPlayers.map(name => ({
                 name,
                 points: 0,
+                goals: 0,
+                assists: 0,
                 games: 0,
                 wins: 0,
                 draws: 0,
@@ -233,6 +243,8 @@
         const updatedPlayers = players.map(player => ({
           ...player,
           points: player.points,
+          goals: player.goals,
+          assists: player.assists,
           games: player.games,
           wins: player.wins,
           draws: player.draws,
@@ -354,6 +366,8 @@
               const updatedPlayers = data.players.map(player => ({
                 name: player.name,
                 points: player.points || 0,
+                goals: player.goals || 0,
+                assists: player.assists || 0,
                 games: player.games || 0,
                 wins: player.wins || 0,
                 draws: player.draws || 0,
@@ -592,7 +606,14 @@
               </thead>
               <tbody>
                 {leaderboard.map(player => (
-                  <tr key={player.name}>
+                  <tr
+                    key={player.name}
+                    className={
+                      player.points === firstPoints && firstPoints >= 2 ? 'bg-yellow-200' :
+                      player.points === secondPoints && secondPoints >= 2 ? 'bg-gray-300' :
+                      player.points === thirdPoints && thirdPoints >= 2 ? 'bg-orange-200' : ''
+                    }
+                  >
                     <td className="border p-2">
                       {player.points === firstPoints && firstPoints >= 2 ? `🥇 ${player.name}` :
                        player.points === secondPoints && secondPoints >= 2 ? `🥈 ${player.name}` :
@@ -625,6 +646,8 @@
                 const resetPlayers = defaultPlayers.map(name => ({
                   name,
                   points: 0,
+                  goals: 0,
+                  assists: 0,
                   games: 0,
                   wins: 0,
                   draws: 0,
