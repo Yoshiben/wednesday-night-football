@@ -39,8 +39,6 @@
         return defaultPlayers.map(name => ({
           name,
           points: 0,
-          goals: 0,
-          assists: 0,
           games: 0,
           wins: 0,
           draws: 0,
@@ -72,8 +70,6 @@
                 const fetchedPlayers = data.players.map(player => ({
                   name: player.name,
                   points: player.points || 0,
-                  goals: player.goals || 0,
-                  assists: player.assists || 0,
                   games: player.games || 0,
                   wins: player.wins || 0,
                   draws: player.draws || 0,
@@ -88,8 +84,6 @@
                 const defaultPlayerData = defaultPlayers.map(name => ({
                   name,
                   points: 0,
-                  goals: 0,
-                  assists: 0,
                   games: 0,
                   wins: 0,
                   draws: 0,
@@ -120,8 +114,6 @@
                 const defaultPlayerData = defaultPlayers.map(name => ({
                   name,
                   points: 0,
-                  goals: 0,
-                  assists: 0,
                   games: 0,
                   wins: 0,
                   draws: 0,
@@ -152,8 +144,6 @@
               const defaultPlayerData = defaultPlayers.map(name => ({
                 name,
                 points: 0,
-                goals: 0,
-                assists: 0,
                 games: 0,
                 wins: 0,
                 draws: 0,
@@ -243,8 +233,6 @@
         const updatedPlayers = players.map(player => ({
           ...player,
           points: player.points,
-          goals: player.goals,
-          assists: player.assists,
           games: player.games,
           wins: player.wins,
           draws: player.draws,
@@ -366,8 +354,6 @@
               const updatedPlayers = data.players.map(player => ({
                 name: player.name,
                 points: player.points || 0,
-                goals: player.goals || 0,
-                assists: player.assists || 0,
                 games: player.games || 0,
                 wins: player.wins || 0,
                 draws: player.draws || 0,
@@ -540,25 +526,6 @@
             </a>
           </div>
 
-          {/* Export and Import Data Buttons */}
-          <div className="mb-8 flex gap-4">
-            <button
-              onClick={exportData}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              Export Data
-            </button>
-            <label className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer">
-              Import Data
-              <input
-                type="file"
-                accept=".json"
-                onChange={importData}
-                className="hidden"
-              />
-            </label>
-          </div>
-
           {/* Recent Matches */}
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-2">Recent Matches</h2>
@@ -633,8 +600,23 @@
             </table>
           </div>
 
-          {/* Reset Button */}
-          <div className="mt-4 text-center">
+          {/* Export, Import, and Reset Buttons */}
+          <div className="mt-4 flex justify-center gap-2">
+            <button
+              onClick={exportData}
+              className="bg-blue-500 text-white px-1 py-0.5 text-xs rounded hover:bg-blue-600"
+            >
+              Export Data
+            </button>
+            <label className="bg-blue-500 text-white px-1 py-0.5 text-xs rounded hover:bg-blue-600 cursor-pointer">
+              Import Data
+              <input
+                type="file"
+                accept=".json"
+                onChange={importData}
+                className="hidden"
+              />
+            </label>
             <button
               onClick={async () => {
                 if (hashPassword(password) !== HASHED_PASSWORD) {
@@ -646,8 +628,6 @@
                 const resetPlayers = defaultPlayers.map(name => ({
                   name,
                   points: 0,
-                  goals: 0,
-                  assists: 0,
                   games: 0,
                   wins: 0,
                   draws: 0,
