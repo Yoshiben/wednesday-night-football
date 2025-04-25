@@ -3,51 +3,63 @@
     {
       "name": "Bailey Fulton",
       "points": 4,
-      "games": 3,
+      "goals": 0,
+      "assists": 0,
+      "games": 4,
       "wins": 2,
       "draws": 0,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "Ben Attle",
       "points": 4,
-      "games": 3,
+      "goals": 0,
+      "assists": 0,
+      "games": 4,
       "wins": 2,
       "draws": 0,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "Bradley Travis",
       "points": 4,
-      "games": 3,
+      "goals": 0,
+      "assists": 0,
+      "games": 4,
       "wins": 2,
       "draws": 0,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "Chad Ogden",
       "points": 4,
-      "games": 3,
+      "goals": 0,
+      "assists": 0,
+      "games": 4,
       "wins": 2,
       "draws": 0,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "Craig Ingham",
       "points": 4,
-      "games": 3,
+      "goals": 0,
+      "assists": 0,
+      "games": 4,
       "wins": 2,
       "draws": 0,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "Danny Minshull",
       "points": 4,
+      "goals": 0,
+      "assists": 0,
       "games": 3,
       "wins": 2,
       "draws": 0,
@@ -56,9 +68,11 @@
     },
     {
       "name": "Dom Johnson",
-      "points": 2,
-      "games": 2,
-      "wins": 1,
+      "points": 4,
+      "goals": 0,
+      "assists": 0,
+      "games": 3,
+      "wins": 2,
       "draws": 0,
       "losses": 1,
       "motmAwards": 0
@@ -66,53 +80,65 @@
     {
       "name": "James Shooter",
       "points": 2,
-      "games": 2,
+      "goals": 0,
+      "assists": 0,
+      "games": 3,
       "wins": 1,
       "draws": 0,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 1
     },
     {
       "name": "Joe Duffy",
-      "points": 2,
-      "games": 2,
-      "wins": 1,
+      "points": 4,
+      "goals": 0,
+      "assists": 0,
+      "games": 3,
+      "wins": 2,
       "draws": 0,
       "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Joe Kinnear",
-      "points": 2,
-      "games": 2,
-      "wins": 1,
+      "points": 4,
+      "goals": 0,
+      "assists": 0,
+      "games": 3,
+      "wins": 2,
       "draws": 0,
       "losses": 1,
       "motmAwards": 1
     },
     {
       "name": "Joe Rawlins",
-      "points": 2,
-      "games": 1,
-      "wins": 1,
+      "points": 4,
+      "goals": 0,
+      "assists": 0,
+      "games": 2,
+      "wins": 2,
       "draws": 0,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "John Sheard (Shed)",
-      "points": 0,
-      "games": 0,
-      "wins": 0,
+      "points": 2,
+      "goals": 0,
+      "assists": 0,
+      "games": 1,
+      "wins": 1,
       "draws": 0,
       "losses": 0,
-      "motmAwards": 0
+      "motmAwards": 1
     },
     {
       "name": "Jorge Westin-Pearson",
-      "points": 2,
-      "games": 2,
-      "wins": 1,
+      "points": 4,
+      "goals": 0,
+      "assists": 0,
+      "games": 3,
+      "wins": 2,
       "draws": 0,
       "losses": 1,
       "motmAwards": 0
@@ -120,6 +146,8 @@
     {
       "name": "Kyle Carrington",
       "points": 0,
+      "goals": 0,
+      "assists": 0,
       "games": 2,
       "wins": 0,
       "draws": 0,
@@ -129,6 +157,8 @@
     {
       "name": "Leon Khan",
       "points": 0,
+      "goals": 0,
+      "assists": 0,
       "games": 1,
       "wins": 0,
       "draws": 0,
@@ -138,6 +168,8 @@
     {
       "name": "Niall Raymond",
       "points": 0,
+      "goals": 0,
+      "assists": 0,
       "games": 0,
       "wins": 0,
       "draws": 0,
@@ -147,6 +179,8 @@
     {
       "name": "Ross Barney",
       "points": 0,
+      "goals": 0,
+      "assists": 0,
       "games": 0,
       "wins": 0,
       "draws": 0,
@@ -156,6 +190,8 @@
     {
       "name": "Sohrob Rostampour",
       "points": 0,
+      "goals": 0,
+      "assists": 0,
       "games": 1,
       "wins": 0,
       "draws": 0,
@@ -165,6 +201,8 @@
     {
       "name": "Tom Kelton",
       "points": 0,
+      "goals": 0,
+      "assists": 0,
       "games": 1,
       "wins": 0,
       "draws": 0,
@@ -174,6 +212,8 @@
     {
       "name": "Tom Wright",
       "points": 0,
+      "goals": 0,
+      "assists": 0,
       "games": 1,
       "wins": 0,
       "draws": 0,
@@ -183,6 +223,8 @@
     {
       "name": "Zach Murphy",
       "points": 0,
+      "goals": 0,
+      "assists": 0,
       "games": 1,
       "wins": 0,
       "draws": 0,
@@ -252,6 +294,27 @@
       ],
       "result": "blacks",
       "motm": "James Shooter",
+      "date": "4/25/2025"
+    },
+    {
+      "blacks": [
+        "Bailey Fulton",
+        "Ben Attle",
+        "Bradley Travis",
+        "Chad Ogden",
+        "Craig Ingham",
+        "James Shooter"
+      ],
+      "greens": [
+        "John Sheard (Shed)",
+        "Dom Johnson",
+        "Joe Duffy",
+        "Joe Kinnear",
+        "Joe Rawlins",
+        "Jorge Westin-Pearson"
+      ],
+      "result": "greens",
+      "motm": "John Sheard (Shed)",
       "date": "4/25/2025"
     }
   ]
