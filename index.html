@@ -60,12 +60,14 @@
       useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('data.json');
+            const response = await fetch('data.json?t=' + new Date().getTime(), {
+              cache: 'no-store'
+            });
             if (response.ok) {
               const data = await response.json();
               console.log('Fetched data from GitHub:', data);
               if (data.players) {
-                setPlayers(data.players.map(player => ({
+                const fetchedPlayers = data.players.map(player => ({
                   name: player.name,
                   points: player.points || 0,
                   games: player.games || 0,
@@ -73,27 +75,92 @@
                   draws: player.draws || 0,
                   losses: player.losses || 0,
                   motmAwards: player.motmAwards || 0
-                })));
+                }));
+                setPlayers(fetchedPlayers);
+                localStorage.setItem('players', JSON.stringify(fetchedPlayers));
+                console.log('Set players from GitHub:', fetchedPlayers);
+              } else {
+                console.log('No players in data.json, using defaultPlayers');
+                const defaultPlayerData = defaultPlayers.map(name => ({
+                  name,
+                  points: 0,
+                  games: 0,
+                  wins: 0,
+                  draws: 0,
+                  losses: 0,
+                  motmAwards: 0
+                }));
+                setPlayers(defaultPlayerData);
+                localStorage.setItem('players', JSON.stringify(defaultPlayerData));
               }
               if (data.matches) {
                 setMatches(data.matches);
+                localStorage.setItem('matches', JSON.stringify(data.matches));
+                console.log('Set matches from GitHub:', data.matches);
+              } else {
+                console.log('No matches in data.json');
+                setMatches([]);
+                localStorage.setItem('matches', JSON.stringify([]));
               }
             } else {
-              console.log('No data.json found, using localStorage');
+              console.error('Failed to fetch data.json:', response.status);
+              const savedPlayers = localStorage.getItem('players');
+              const savedMatches = localStorage.getItem('matches');
+              if (savedPlayers) {
+                setPlayers(JSON.parse(savedPlayers));
+                console.log('Loaded players from localStorage:', JSON.parse(savedPlayers));
+              } else {
+                console.log('No localStorage players, using defaultPlayers');
+                const defaultPlayerData = defaultPlayers.map(name => ({
+                  name,
+                  points: 0,
+                  games: 0,
+                  wins: 0,
+                  draws: 0,
+                  losses: 0,
+                  motmAwards: 0
+                }));
+                setPlayers(defaultPlayerData);
+                localStorage.setItem('players', JSON.stringify(defaultPlayerData));
+              }
+              if (savedMatches) {
+                setMatches(JSON.parse(savedMatches));
+                console.log('Loaded matches from localStorage:', JSON.parse(savedMatches));
+              } else {
+                console.log('No localStorage matches');
+                setMatches([]);
+                localStorage.setItem('matches', JSON.stringify([]));
+              }
             }
           } catch (error) {
-            console.error('Error fetching data:', error);
-          }
-
-          const savedPlayers = localStorage.getItem('players');
-          const savedMatches = localStorage.getItem('matches');
-          if (savedPlayers) {
-            setPlayers(JSON.parse(savedPlayers));
-            console.log('Loaded players from localStorage:', JSON.parse(savedPlayers));
-          }
-          if (savedMatches) {
-            setMatches(JSON.parse(savedMatches));
-            console.log('Loaded matches from localStorage:', JSON.parse(savedMatches));
+            console.error('Error fetching data.json:', error);
+            const savedPlayers = localStorage.getItem('players');
+            const savedMatches = localStorage.getItem('matches');
+            if (savedPlayers) {
+              setPlayers(JSON.parse(savedPlayers));
+              console.log('Loaded players from localStorage:', JSON.parse(savedPlayers));
+            } else {
+              console.log('No localStorage players, using defaultPlayers');
+              const defaultPlayerData = defaultPlayers.map(name => ({
+                name,
+                points: 0,
+                games: 0,
+                wins: 0,
+                draws: 0,
+                losses: 0,
+                motmAwards: 0
+              }));
+              setPlayers(defaultPlayerData);
+              localStorage.setItem('players', JSON.stringify(defaultPlayerData));
+            }
+            if (savedMatches) {
+              setMatches(JSON.parse(savedMatches));
+              console.log('Loaded matches from localStorage:', JSON.parse(savedMatches));
+            } else {
+              console.log('No localStorage matches');
+              setMatches([]);
+              localStorage.setItem('matches', JSON.stringify([]));
+            }
           }
         };
         fetchData();
