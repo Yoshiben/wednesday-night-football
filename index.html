@@ -592,16 +592,11 @@
               </thead>
               <tbody>
                 {leaderboard.map(player => (
-                  <tr
-                    key={player.name}
-                    className={
-                      player.points === firstPoints && firstPoints >= 2 ? 'bg-yellow-200' :
-                      player.points === secondPoints ? 'bg-gray-300' :
-                      player.points === thirdPoints ? 'bg-orange-200' : ''
-                    }
-                  >
+                  <tr key={player.name}>
                     <td className="border p-2">
-                      {player.points === firstPoints && firstPoints >= 2 ? `🏆 ${player.name}` : player.name}
+                      {player.points === firstPoints && firstPoints >= 2 ? `🥇 ${player.name}` :
+                       player.points === secondPoints && secondPoints >= 2 ? `🥈 ${player.name}` :
+                       player.points === thirdPoints && thirdPoints >= 2 ? `🥉 ${player.name}` : player.name}
                     </td>
                     <td className="border p-2">{player.points}</td>
                     <td className="border p-2">{player.games}</td>
@@ -609,7 +604,7 @@
                     <td className="border p-2">{player.draws}</td>
                     <td className="border p-2">{player.losses}</td>
                     <td className="border p-2">
-                      {player.motmAwards === maxMotmAwards ? `🏆 ${player.motmAwards}` : player.motmAwards}
+                      {player.motmAwards === maxMotmAwards && player.motmAwards > 0 ? `🏆 ${player.motmAwards}` : player.motmAwards}
                     </td>
                   </tr>
                 ))}
