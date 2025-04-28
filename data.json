@@ -38,54 +38,54 @@
     },
     {
       "name": "Craig Ingham",
-      "points": 5,
-      "games": 6,
-      "wins": 2,
+      "points": 7,
+      "games": 7,
+      "wins": 3,
       "draws": 1,
       "losses": 3,
       "motmAwards": 0
     },
     {
       "name": "Danny Minshull",
-      "points": 4,
-      "games": 4,
-      "wins": 2,
+      "points": 6,
+      "games": 5,
+      "wins": 3,
       "draws": 0,
       "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "Dom Johnson",
-      "points": 6,
-      "games": 4,
-      "wins": 3,
+      "points": 8,
+      "games": 5,
+      "wins": 4,
       "draws": 0,
       "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "James Shooter",
-      "points": 5,
-      "games": 5,
-      "wins": 2,
+      "points": 7,
+      "games": 6,
+      "wins": 3,
       "draws": 1,
       "losses": 2,
       "motmAwards": 1
     },
     {
       "name": "Joe Duffy",
-      "points": 6,
-      "games": 4,
-      "wins": 3,
+      "points": 8,
+      "games": 5,
+      "wins": 4,
       "draws": 0,
       "losses": 1,
-      "motmAwards": 0
+      "motmAwards": 1
     },
     {
       "name": "Joe Kinnear",
-      "points": 6,
-      "games": 4,
-      "wins": 3,
+      "points": 8,
+      "games": 5,
+      "wins": 4,
       "draws": 0,
       "losses": 1,
       "motmAwards": 1
@@ -102,23 +102,32 @@
     {
       "name": "John Sheard (Shed)",
       "points": 3,
-      "games": 2,
+      "games": 3,
       "wins": 1,
       "draws": 1,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 1
     },
     {
       "name": "Jorge Westin-Pearson",
       "points": 7,
-      "games": 5,
+      "games": 6,
       "wins": 3,
       "draws": 1,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "Kyle Carrington",
+      "points": 1,
+      "games": 4,
+      "wins": 0,
+      "draws": 1,
+      "losses": 3,
+      "motmAwards": 1
+    },
+    {
+      "name": "Leon Khan",
       "points": 1,
       "games": 3,
       "wins": 0,
@@ -127,30 +136,21 @@
       "motmAwards": 1
     },
     {
-      "name": "Leon Khan",
+      "name": "Niall Raymond",
       "points": 1,
       "games": 2,
       "wins": 0,
       "draws": 1,
       "losses": 1,
-      "motmAwards": 1
-    },
-    {
-      "name": "Niall Raymond",
-      "points": 1,
-      "games": 1,
-      "wins": 0,
-      "draws": 1,
-      "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Ross Barney",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     },
     {
@@ -316,6 +316,27 @@
       "result": "greens",
       "motm": "Chad Ogden",
       "date": "4/25/2025"
+    },
+    {
+      "blacks": [
+        "Craig Ingham",
+        "Danny Minshull",
+        "Dom Johnson",
+        "James Shooter",
+        "Joe Duffy",
+        "Joe Kinnear"
+      ],
+      "greens": [
+        "John Sheard (Shed)",
+        "Jorge Westin-Pearson",
+        "Kyle Carrington",
+        "Leon Khan",
+        "Niall Raymond",
+        "Ross Barney"
+      ],
+      "result": "blacks",
+      "motm": "Joe Duffy",
+      "date": "28/04/2025"
     }
   ]
 }
