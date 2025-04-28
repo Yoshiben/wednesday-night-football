@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone@7.22.5/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="./players.js"></script>
+  <script src="./players.js?t=<%= new Date().getTime() %>"></script>
 </head>
 <body>
   <div id="root">
@@ -56,7 +56,7 @@
       const [password, setPassword] = useState('');
       const [error, setError] = useState('');
 
-      // Fetch data from GitHub on mount
+      // Fetch and sync data from GitHub on mount
       useEffect(() => {
         const fetchData = async () => {
           try {
@@ -66,33 +66,60 @@
             if (response.ok) {
               const data = await response.json();
               console.log('Fetched data from GitHub:', data);
-              if (data.players) {
-                const fetchedPlayers = data.players.map(player => ({
-                  name: player.name,
-                  points: player.points || 0,
-                  games: player.games || 0,
-                  wins: player.wins || 0,
-                  draws: player.draws || 0,
-                  losses: player.losses || 0,
-                  motmAwards: player.motmAwards || 0
-                }));
-                setPlayers(fetchedPlayers);
-                localStorage.setItem('players', JSON.stringify(fetchedPlayers));
-                console.log('Set players from GitHub:', fetchedPlayers);
-              } else {
-                console.log('No players in data.json, using defaultPlayers');
-                const defaultPlayerData = defaultPlayers.map(name => ({
-                  name,
-                  points: 0,
-                  games: 0,
-                  wins: 0,
-                  draws: 0,
-                  losses: 0,
-                  motmAwards: 0
-                }));
-                setPlayers(defaultPlayerData);
-                localStorage.setItem('players', JSON.stringify(defaultPlayerData));
+              
+              // Sync players from data.json with defaultPlayers
+              let updatedPlayers = data.players ? data.players.map(player => ({
+                name: player.name,
+                points: player.points || 0,
+                games: player.games || 0,
+                wins: player.wins || 0,
+                draws: player.draws || 0,
+                losses: player.losses || 0,
+                motmAwards: player.motmAwards || 0
+              })) : [];
+              
+              // Add new players from defaultPlayers if not in data.json
+              const newPlayers = defaultPlayers.filter(
+                name => !updatedPlayers.some(p => p.name === name)
+              ).map(name => ({
+                name,
+                points: 0,
+                games: 0,
+                wins: 0,
+                draws: 0,
+                losses: 0,
+                motmAwards: 0
+              }));
+              
+              if (newPlayers.length > 0) {
+                updatedPlayers = [...updatedPlayers, ...newPlayers];
+                // Update data.json via Vercel API
+                try {
+                  const updateResponse = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      password,
+                      players: updatedPlayers,
+                      matches: data.matches || []
+                    })
+                  });
+                  if (updateResponse.ok) {
+                    console.log('Updated data.json with new players');
+                  } else {
+                    console.error('Failed to update data.json:', await updateResponse.json());
+                    setError('Failed to sync new players');
+                  }
+                } catch (error) {
+                  console.error('Error updating data.json:', error);
+                  setError('Error syncing new players');
+                }
               }
+              
+              setPlayers(updatedPlayers);
+              localStorage.setItem('players', JSON.stringify(updatedPlayers));
+              console.log('Set players from GitHub:', updatedPlayers);
+              
               if (data.matches) {
                 setMatches(data.matches);
                 localStorage.setItem('matches', JSON.stringify(data.matches));
@@ -351,7 +378,8 @@
             const data = JSON.parse(event.target.result);
             console.log('Imported data:', data);
             if (data.players && data.matches) {
-              const updatedPlayers = data.players.map(player => ({
+              // Sync imported players with defaultPlayers
+              let updatedPlayers = data.players.map(player => ({
                 name: player.name,
                 points: player.points || 0,
                 games: player.games || 0,
@@ -360,6 +388,19 @@
                 losses: player.losses || 0,
                 motmAwards: player.motmAwards || 0
               }));
+              const newPlayers = defaultPlayers.filter(
+                name => !updatedPlayers.some(p => p.name === name)
+              ).map(name => ({
+                name,
+                points: 0,
+                games: 0,
+                wins: 0,
+                draws: 0,
+                losses: 0,
+                motmAwards: 0
+              }));
+              updatedPlayers = [...updatedPlayers, ...newPlayers];
+              
               setPlayers(updatedPlayers);
               setMatches(data.matches);
               localStorage.setItem('players', JSON.stringify(updatedPlayers));
