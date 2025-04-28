@@ -9,22 +9,6 @@
   <script src="https://unpkg.com/@babel/standalone@7.22.5/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="./players.js?t=<%= new Date().getTime() %>"></script>
-  <style>
-    /* Custom highlight for selected players in Blacks list */
-    .blacks-list .player-item.selected {
-      background-color: #000000;
-      color: #ffffff;
-    }
-    /* Custom highlight for selected players in Greens list */
-    .greens-list .player-item.selected {
-      background-color: #22c55e;
-      color: #ffffff;
-    }
-    /* Hover effect for player items */
-    .player-item:hover {
-      background-color: #e5e7eb; /* Tailwind gray-200 */
-    }
-  </style>
 </head>
 <body>
   <div id="root">
@@ -67,8 +51,6 @@
       const [greens, setGreens] = useState([]);
       const [blackPlayers, setBlackPlayers] = useState([]);
       const [greenPlayers, setGreenPlayers] = useState([]);
-      const [lastClickedBlack, setLastClickedBlack] = useState(null);
-      const [lastClickedGreen, setLastClickedGreen] = useState(null);
       const [result, setResult] = useState('');
       const [motm, setMotm] = useState('');
       const [password, setPassword] = useState('');
@@ -102,6 +84,7 @@
               const data = await response.json();
               console.log('Fetched data from GitHub:', data);
               
+              // Load players from data.json
               let updatedPlayers = data.players ? data.players.map(player => ({
                 name: player.name,
                 points: player.points || 0,
@@ -112,6 +95,7 @@
                 motmAwards: player.motmAwards || 0
               })) : [];
               
+              // Merge with defaultPlayers to include new players
               const newPlayers = defaultPlayers.filter(
                 name => !updatedPlayers.some(p => p.name === name)
               ).map(name => ({
@@ -209,73 +193,6 @@
         }
       };
 
-      // Handle click for Blacks selection
-      const handleBlackPlayerClick = (playerName, e) => {
-        const availablePlayers = players
-          .filter(p => !blacks.includes(p.name) && !greens.includes(p.name))
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .map(p => p.name);
-
-        if (e.shiftKey && lastClickedBlack) {
-          // Shift+click: Select range between last clicked and current
-          const currentIndex = availablePlayers.indexOf(playerName);
-          const lastIndex = availablePlayers.indexOf(lastClickedBlack);
-          const start = Math.min(currentIndex, lastIndex);
-          const end = Math.max(currentIndex, lastIndex);
-          const range = availablePlayers.slice(start, end + 1);
-          setBlackPlayers(prev => {
-            // Add range to existing selection without duplicates
-            const newSelection = [...new Set([...prev, ...range])];
-            return newSelection;
-          });
-        } else if (e.ctrlKey || e.metaKey) {
-          // Ctrl+click or Cmd+click: Toggle individual player in selection
-          setBlackPlayers(prev =>
-            prev.includes(playerName)
-              ? prev.filter(p => p !== playerName)
-              : [...prev, playerName]
-          );
-          setLastClickedBlack(playerName);
-        } else {
-          // Single click: Select only this player
-          setBlackPlayers([playerName]);
-          setLastClickedBlack(playerName);
-        }
-      };
-
-      // Handle click for Greens selection
-      const handleGreenPlayerClick = (playerName, e) => {
-        const availablePlayers = players
-          .filter(p => !greens.includes(p.name) && !blacks.includes(p.name))
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .map(p => p.name);
-
-        if (e.shiftKey && lastClickedGreen) {
-          // Shift+click: Select range between last clicked and current
-          const currentIndex = availablePlayers.indexOf(playerName);
-          const lastIndex = availablePlayers.indexOf(lastClickedGreen);
-          const start = Math.min(currentIndex, lastIndex);
-          const end = Math.max(currentIndex, lastIndex);
-          const range = availablePlayers.slice(start, end + 1);
-          setGreenPlayers(prev => {
-            const newSelection = [...new Set([...prev, ...range])];
-            return newSelection;
-          });
-        } else if (e.ctrlKey || e.metaKey) {
-          // Ctrl+click or Cmd+click: Toggle individual player in selection
-          setGreenPlayers(prev =>
-            prev.includes(playerName)
-              ? prev.filter(p => p !== playerName)
-              : [...prev, playerName]
-          );
-          setLastClickedGreen(playerName);
-        } else {
-          // Single click: Select only this player
-          setGreenPlayers([playerName]);
-          setLastClickedGreen(playerName);
-        }
-      };
-
       // Add players to Blacks
       const addToBlacks = (e) => {
         e.preventDefault();
@@ -286,7 +203,6 @@
           if (blacks.length + newPlayers.length <= 6) {
             setBlacks(prev => [...prev, ...newPlayers]);
             setBlackPlayers([]);
-            setLastClickedBlack(null);
           }
         }
       };
@@ -301,7 +217,6 @@
           if (greens.length + newPlayers.length <= 6) {
             setGreens(prev => [...prev, ...newPlayers]);
             setGreenPlayers([]);
-            setLastClickedGreen(null);
           }
         }
       };
@@ -402,10 +317,9 @@
         setMotm('');
         setBlackPlayers([]);
         setGreenPlayers([]);
-        setLastClickedBlack(null);
-        setLastClickedGreen(null);
         setError('');
 
+        // Call Vercel API
         try {
           const response = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
             method: 'POST',
@@ -524,22 +438,19 @@
               {/* Blacks Team */}
               <div className="mb-8">
                 <form onSubmit={addToBlacks} className="flex gap-2">
-                  <div className="blacks-list flex-1 border rounded h-32 overflow-y-auto">
+                  <select
+                    multiple
+                    value={blackPlayers}
+                    onChange={(e) => setBlackPlayers([...e.target.selectedOptions].map(o => o.value))}
+                    className="flex-1 p-2 border rounded h-32"
+                  >
                     {players
                       .filter(p => !blacks.includes(p.name) && !greens.includes(p.name))
                       .sort((a, b) => a.name.localeCompare(b.name))
                       .map(player => (
-                        <div
-                          key={player.name}
-                          className={`player-item p-2 cursor-pointer ${
-                            blackPlayers.includes(player.name) ? 'selected' : ''
-                          }`}
-                          onClick={(e) => handleBlackPlayerClick(player.name, e)}
-                        >
-                          {player.name}
-                        </div>
+                        <option key={player.name} value={player.name}>{player.name}</option>
                       ))}
-                  </div>
+                  </select>
                   <button
                     type="submit"
                     className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
@@ -567,22 +478,19 @@
               {/* Greens Team */}
               <div className="mb-8">
                 <form onSubmit={addToGreens} className="flex gap-2">
-                  <div className="greens-list flex-1 border rounded h-32 overflow-y-auto">
+                  <select
+                    multiple
+                    value={greenPlayers}
+                    onChange={(e) => setGreenPlayers([...e.target.selectedOptions].map(o => o.value))}
+                    className="flex-1 p-2 border rounded h-32"
+                  >
                     {players
                       .filter(p => !greens.includes(p.name) && !blacks.includes(p.name))
                       .sort((a, b) => a.name.localeCompare(b.name))
                       .map(player => (
-                        <div
-                          key={player.name}
-                          className={`player-item p-2 cursor-pointer ${
-                            greenPlayers.includes(player.name) ? 'selected' : ''
-                          }`}
-                          onClick={(e) => handleGreenPlayerClick(player.name, e)}
-                        >
-                          {player.name}
-                        </div>
+                        <option key={player.name} value={player.name}>{player.name}</option>
                       ))}
-                  </div>
+                  </select>
                   <button
                     type="submit"
                     className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
@@ -774,10 +682,9 @@
                     setMotm('');
                     setBlackPlayers([]);
                     setGreenPlayers([]);
-                    setLastClickedBlack(null);
-                    setLastClickedGreen(null);
                     setError('');
 
+                    // Call Vercel API for reset
                     try {
                       const response = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
                         method: 'POST',
