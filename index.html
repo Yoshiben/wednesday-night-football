@@ -44,7 +44,7 @@
           draws: 0,
           losses: 0,
           motmAwards: 0
-        }));
+        })).sort((a, b) => a.name.localeCompare(b.name));
       });
       const [matches, setMatches] = useState([]);
       const [blacks, setBlacks] = useState([]);
@@ -107,7 +107,7 @@
                 losses: 0,
                 motmAwards: 0
               }));
-              updatedPlayers = [...updatedPlayers, ...newPlayers];
+              updatedPlayers = [...updatedPlayers, ...newPlayers].sort((a, b) => a.name.localeCompare(b.name));
               
               setPlayers(updatedPlayers);
               console.log('Set players from GitHub:', updatedPlayers);
@@ -132,7 +132,7 @@
                 draws: 0,
                 losses: 0,
                 motmAwards: 0
-              }));
+              })).sort((a, b) => a.name.localeCompare(b.name));
               setPlayers(defaultPlayerData);
             }
           } catch (error) {
@@ -146,7 +146,7 @@
               draws: 0,
               losses: 0,
               motmAwards: 0
-            }));
+            })).sort((a, b) => a.name.localeCompare(b.name));
             setPlayers(defaultPlayerData);
           }
         };
@@ -389,7 +389,7 @@
                 losses: 0,
                 motmAwards: 0
               }));
-              updatedPlayers = [...updatedPlayers, ...newPlayers];
+              updatedPlayers = [...updatedPlayers, ...newPlayers].sort((a, b) => a.name.localeCompare(b.name));
               
               setPlayers(updatedPlayers);
               setMatches(data.matches);
@@ -416,306 +416,315 @@
       const thirdPoints = sortedPoints[2] || 0;
 
       return (
-        <div className="container mx-auto p-4 max-w-2xl">
+        <div className="container mx-auto p-4 max-w-7xl">
           <h1 className="text-3xl font-bold mb-6 text-center">Wednesday Night Football ⚽</h1>
-
-          {/* Password Input */}
-          <div className="mb-8">
-            <label className="block mb-1">Password (for logging matches and syncing)</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
-              className="w-full p-2 border rounded"
-            />
-            {error && <p className="text-red-500 mt-2">{error}</p>}
-            {isPasswordValid && <p className="text-green-500 mt-2">Password verified!</p>}
-          </div>
-
-          {/* Blacks Team */}
-          <div className="mb-8">
-            <form onSubmit={addToBlacks} className="flex gap-2">
-              <select
-                multiple
-                value={blackPlayers}
-                onChange={(e) => setBlackPlayers([...e.target.selectedOptions].map(o => o.value))}
-                className="flex-1 p-2 border rounded h-32"
-              >
-                {players
-                  .filter(p => !blacks.includes(p.name) && !greens.includes(p.name))
-                  .map(player => (
-                    <option key={player.name} value={player.name}>{player.name}</option>
-                  ))}
-              </select>
-              <button
-                type="submit"
-                className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
-                disabled={blacks.length >= 6}
-              >
-                Add to Blacks
-              </button>
-            </form>
-            <div className="mt-2">
-              <p>Blacks: {blacks.length === 0 ? 'None' : ''}</p>
-              {blacks.map(player => (
-                <div key={player} className="flex items-center gap-2">
-                  <span>{player}</span>
-                  <button
-                    onClick={() => removeFromBlacks(player)}
-                    className="bg-red-500 text-white px-1 py-0.05 text-sm rounded hover:bg-red-500"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Greens Team */}
-          <div className="mb-8">
-            <form onSubmit={addToGreens} className="flex gap-2">
-              <select
-                multiple
-                value={greenPlayers}
-                onChange={(e) => setGreenPlayers([...e.target.selectedOptions].map(o => o.value))}
-                className="flex-1 p-2 border rounded h-32"
-              >
-                {players
-                  .filter(p => !greens.includes(p.name) && !blacks.includes(p.name))
-                  .map(player => (
-                    <option key={player.name} value={player.name}>{player.name}</option>
-                  ))}
-              </select>
-              <button
-                type="submit"
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                disabled={greens.length >= 6}
-              >
-                Add to Greens
-              </button>
-            </form>
-            <div className="mt-2">
-              <p>Greens: {greens.length === 0 ? 'None' : ''}</p>
-              {greens.map(player => (
-                <div key={player} className="flex items-center gap-2">
-                  <span>{player}</span>
-                  <button
-                    onClick={() => removeFromGreens(player)}
-                    className="bg-red-500 text-white px-1 py-0.05 text-sm rounded hover:bg-red-500"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Log Match */}
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold mb-2">Log Match</h2>
-            <form onSubmit={logMatch}>
-              <div className="mb-4">
-                <label className="block mb-1">Result</label>
-                <select
-                  value={result}
-                  onChange={(e) => setResult(e.target.value)}
+          <div className="md:grid md:grid-cols-2 md:gap-8">
+            {/* Left Column: Password, Teams, Log Match */}
+            <div>
+              {/* Password Input */}
+              <div className="mb-8">
+                <label className="block mb-1">Password (for logging matches and syncing)</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password"
                   className="w-full p-2 border rounded"
-                >
-                  <option value="">Select result</option>
-                  <option value="blacks">Blacks Win</option>
-                  <option value="greens">Greens Win</option>
-                  <option value="draw">Draw</option>
-                </select>
+                />
+                {error && <p className="text-red-500 mt-2">{error}</p>}
+                {isPasswordValid && <p className="text-green-500 mt-2">Password verified!</p>}
               </div>
-              <div className="mb-4">
-                <label className="block mb-1">Man of the Match</label>
-                <select
-                  value={motm}
-                  onChange={(e) => setMotm(e.target.value)}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="">None</option>
-                  {[...blacks, ...greens].sort().map(player => (
-                    <option key={player} value={player}>{player}</option>
+
+              {/* Blacks Team */}
+              <div className="mb-8">
+                <form onSubmit={addToBlacks} className="flex gap-2">
+                  <select
+                    multiple
+                    value={blackPlayers}
+                    onChange={(e) => setBlackPlayers([...e.target.selectedOptions].map(o => o.value))}
+                    className="flex-1 p-2 border rounded h-32"
+                  >
+                    {players
+                      .filter(p => !blacks.includes(p.name) && !greens.includes(p.name))
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map(player => (
+                        <option key={player.name} value={player.name}>{player.name}</option>
+                      ))}
+                  </select>
+                  <button
+                    type="submit"
+                    className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
+                    disabled={blacks.length >= 6}
+                  >
+                    Add to Blacks
+                  </button>
+                </form>
+                <div className="mt-2">
+                  <p>Blacks: {blacks.length === 0 ? 'None' : ''}</p>
+                  {blacks.map(player => (
+                    <div key={player} className="flex items-center gap-2">
+                      <span>{player}</span>
+                      <button
+                        onClick={() => removeFromBlacks(player)}
+                        className="bg-red-500 text-white px-1 py-0.05 text-sm rounded hover:bg-red-500"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   ))}
-                </select>
+                </div>
               </div>
-              <div className="flex gap-2">
+
+              {/* Greens Team */}
+              <div className="mb-8">
+                <form onSubmit={addToGreens} className="flex gap-2">
+                  <select
+                    multiple
+                    value={greenPlayers}
+                    onChange={(e) => setGreenPlayers([...e.target.selectedOptions].map(o => o.value))}
+                    className="flex-1 p-2 border rounded h-32"
+                  >
+                    {players
+                      .filter(p => !greens.includes(p.name) && !blacks.includes(p.name))
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map(player => (
+                        <option key={player.name} value={player.name}>{player.name}</option>
+                      ))}
+                  </select>
+                  <button
+                    type="submit"
+                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                    disabled={greens.length >= 6}
+                  >
+                    Add to Greens
+                  </button>
+                </form>
+                <div className="mt-2">
+                  <p>Greens: {greens.length === 0 ? 'None' : ''}</p>
+                  {greens.map(player => (
+                    <div key={player} className="flex items-center gap-2">
+                      <span>{player}</span>
+                      <button
+                        onClick={() => removeFromGreens(player)}
+                        className="bg-red-500 text-white px-1 py-0.05 text-sm rounded hover:bg-red-500"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Log Match */}
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold mb-2">Log Match</h2>
+                <form onSubmit={logMatch}>
+                  <div className="mb-4">
+                    <label className="block mb-1">Result</label>
+                    <select
+                      value={result}
+                      onChange={(e) => setResult(e.target.value)}
+                      className="w-full p-2 border rounded"
+                    >
+                      <option value="">Select result</option>
+                      <option value="blacks">Blacks Win</option>
+                      <option value="greens">Greens Win</option>
+                      <option value="draw">Draw</option>
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label className="block mb-1">Man of the Match</label>
+                    <select
+                      value={motm}
+                      onChange={(e) => setMotm(e.target.value)}
+                      className="w-full p-2 border rounded"
+                    >
+                      <option value="">None</option>
+                      {[...blacks, ...greens].sort().map(player => (
+                        <option key={player} value={player}>{player}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="submit"
+                      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                      disabled={!isPasswordValid}
+                    >
+                      Log Match
+                    </button>
+                    <a
+                      href="./history.html"
+                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    >
+                      View Match History
+                    </a>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            {/* Right Column: Recent Matches, Leaderboard, Buttons */}
+            <div>
+              {/* Recent Matches */}
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold mb-2">Recent Matches</h2>
+                {matches.length === 0 ? (
+                  <p>No matches logged yet.</p>
+                ) : (
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-200">
+                        <th className="border p-2">Date</th>
+                        <th className="border p-2">Result</th>
+                        <th className="border p-2">MOTM</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {matches.slice(-3).reverse().map((match, index) => (
+                        <tr key={index}>
+                          <td className="border p-2">{match.date}</td>
+                          <td className="border p-2">
+                            {match.result === 'blacks' ? 'Blacks Win' :
+                             match.result === 'greens' ? 'Greens Win' : 'Draw'}
+                          </td>
+                          <td className="border p-2">{match.motm || 'None'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+
+              {/* Leaderboard */}
+              <div>
+                <h2 className="text-xl font-semibold mb-2">Leaderboard</h2>
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      <th className="border p-2">Player</th>
+                      <th className="border p-2">Points</th>
+                      <th className="border p-2">Games Played</th>
+                      <th className="border p-2">Wins</th>
+                      <th className="border p-2">Draws</th>
+                      <th className="border p-2">Losses</th>
+                      <th className="border p-2">MOTM</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {leaderboard.map(player => (
+                      <tr
+                        key={player.name}
+                        className={
+                          player.points === firstPoints && firstPoints >= 2 ? 'bg-yellow-200' :
+                          player.points === secondPoints && secondPoints >= 2 ? 'bg-gray-300' :
+                          player.points === thirdPoints && thirdPoints >= 2 ? 'bg-orange-200' : ''
+                        }
+                      >
+                        <td className="border p-2">
+                          {player.points === firstPoints && firstPoints >= 2 ? `🥇 ${player.name}` :
+                           player.points === secondPoints && secondPoints >= 2 ? `🥈 ${player.name}` :
+                           player.points === thirdPoints && thirdPoints >= 2 ? `🥉 ${player.name}` : player.name}
+                        </td>
+                        <td className="border p-2">{player.points}</td>
+                        <td className="border p-2">{player.games}</td>
+                        <td className="border p-2">{player.wins}</td>
+                        <td className="border p-2">{player.draws}</td>
+                        <td className="border p-2">{player.losses}</td>
+                        <td className="border p-2">
+                          {player.motmAwards === maxMotmAwards && player.motmAwards > 0 ? `🏆 ${player.motmAwards}` : player.motmAwards}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Export, Import, Reset, and Sync Buttons */}
+              <div className="mt-4 flex justify-center gap-2">
                 <button
-                  type="submit"
-                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                  onClick={exportData}
+                  className="bg-blue-500 text-white px-1 py-0.5 text-xs rounded hover:bg-blue-600"
+                >
+                  Export Data
+                </button>
+                <label className="bg-blue-500 text-white px-1 py-0.5 text-xs rounded hover:bg-blue-600 cursor-pointer">
+                  Import Data
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={importData}
+                    className="hidden"
+                  />
+                </label>
+                <button
+                  onClick={async () => {
+                    if (!isPasswordValid) {
+                      console.log('Invalid password');
+                      setError('Incorrect password. Please enter the correct password.');
+                      return;
+                    }
+
+                    const resetPlayers = defaultPlayers.map(name => ({
+                      name,
+                      points: 0,
+                      games: 0,
+                      wins: 0,
+                      draws: 0,
+                      losses: 0,
+                      motmAwards: 0
+                    })).sort((a, b) => a.name.localeCompare(b.name));
+                    setPlayers(resetPlayers);
+                    setMatches([]);
+                    setBlacks([]);
+                    setGreens([]);
+                    setResult('');
+                    setMotm('');
+                    setBlackPlayers([]);
+                    setGreenPlayers([]);
+                    setError('');
+
+                    // Call Vercel API for reset
+                    try {
+                      const response = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          password,
+                          players: resetPlayers,
+                          matches: []
+                        })
+                      });
+                      const data = await response.json();
+                      if (response.ok) {
+                        console.log('Triggered workflow via Vercel API for reset');
+                        setError('Data reset successfully!');
+                        setTimeout(() => setError(''), 3000);
+                      } else {
+                        console.error('Failed to trigger workflow:', data);
+                        setError(`Failed to reset data: ${data.error}`);
+                      }
+                    } catch (error) {
+                      console.error('Error calling Vercel API:', error);
+                      setError('Error resetting data. Try again later.');
+                    }
+                  }}
+                  className="bg-red-500 text-white px-1 py-0.5 text-xs rounded hover:bg-red-600"
                   disabled={!isPasswordValid}
                 >
-                  Log Match
+                  Reset
                 </button>
-                <a
-                  href="./history.html"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                <button
+                  onClick={syncPlayers}
+                  className="bg-blue-500 text-white px-1 py-0.5 text-xs rounded hover:bg-blue-600"
+                  disabled={!isPasswordValid}
                 >
-                  View Match History
-                </a>
+                  Sync Players
+                </button>
               </div>
-            </form>
-          </div>
-
-          {/* Recent Matches */}
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold mb-2">Recent Matches</h2>
-            {matches.length === 0 ? (
-              <p>No matches logged yet.</p>
-            ) : (
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th className="border p-2">Date</th>
-                    <th className="border p-2">Result</th>
-                    <th className="border p-2">MOTM</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {matches.slice(-3).reverse().map((match, index) => (
-                    <tr key={index}>
-                      <td className="border p-2">{match.date}</td>
-                      <td className="border p-2">
-                        {match.result === 'blacks' ? 'Blacks Win' :
-                         match.result === 'greens' ? 'Greens Win' : 'Draw'}
-                      </td>
-                      <td className="border p-2">{match.motm || 'None'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-
-          {/* Leaderboard */}
-          <div>
-            <h2 className="text-xl font-semibold mb-2">Leaderboard</h2>
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="border p-2">Player</th>
-                  <th className="border p-2">Points</th>
-                  <th className="border p-2">Games Played</th>
-                  <th className="border p-2">Wins</th>
-                  <th className="border p-2">Draws</th>
-                  <th className="border p-2">Losses</th>
-                  <th className="border p-2">MOTM</th>
-                </tr>
-              </thead>
-              <tbody>
-                {leaderboard.map(player => (
-                  <tr
-                    key={player.name}
-                    className={
-                      player.points === firstPoints && firstPoints >= 2 ? 'bg-yellow-200' :
-                      player.points === secondPoints && secondPoints >= 2 ? 'bg-gray-300' :
-                      player.points === thirdPoints && thirdPoints >= 2 ? 'bg-orange-200' : ''
-                    }
-                  >
-                    <td className="border p-2">
-                      {player.points === firstPoints && firstPoints >= 2 ? `🥇 ${player.name}` :
-                       player.points === secondPoints && secondPoints >= 2 ? `🥈 ${player.name}` :
-                       player.points === thirdPoints && thirdPoints >= 2 ? `🥉 ${player.name}` : player.name}
-                    </td>
-                    <td className="border p-2">{player.points}</td>
-                    <td className="border p-2">{player.games}</td>
-                    <td className="border p-2">{player.wins}</td>
-                    <td className="border p-2">{player.draws}</td>
-                    <td className="border p-2">{player.losses}</td>
-                    <td className="border p-2">
-                      {player.motmAwards === maxMotmAwards && player.motmAwards > 0 ? `🏆 ${player.motmAwards}` : player.motmAwards}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Export, Import, Reset, and Sync Buttons */}
-          <div className="mt-4 flex justify-center gap-2">
-            <button
-              onClick={exportData}
-              className="bg-blue-500 text-white px-1 py-0.5 text-xs rounded hover:bg-blue-600"
-            >
-              Export Data
-            </button>
-            <label className="bg-blue-500 text-white px-1 py-0.5 text-xs rounded hover:bg-blue-600 cursor-pointer">
-              Import Data
-              <input
-                type="file"
-                accept=".json"
-                onChange={importData}
-                className="hidden"
-              />
-            </label>
-            <button
-              onClick={async () => {
-                if (!isPasswordValid) {
-                  console.log('Invalid password');
-                  setError('Incorrect password. Please enter the correct password.');
-                  return;
-                }
-
-                const resetPlayers = defaultPlayers.map(name => ({
-                  name,
-                  points: 0,
-                  games: 0,
-                  wins: 0,
-                  draws: 0,
-                  losses: 0,
-                  motmAwards: 0
-                }));
-                setPlayers(resetPlayers);
-                setMatches([]);
-                setBlacks([]);
-                setGreens([]);
-                setResult('');
-                setMotm('');
-                setBlackPlayers([]);
-                setGreenPlayers([]);
-                setError('');
-
-                // Call Vercel API for reset
-                try {
-                  const response = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      password,
-                      players: resetPlayers,
-                      matches: []
-                    })
-                  });
-                  const data = await response.json();
-                  if (response.ok) {
-                    console.log('Triggered workflow via Vercel API for reset');
-                    setError('Data reset successfully!');
-                    setTimeout(() => setError(''), 3000);
-                  } else {
-                    console.error('Failed to trigger workflow:', data);
-                    setError(`Failed to reset data: ${data.error}`);
-                  }
-                } catch (error) {
-                  console.error('Error calling Vercel API:', error);
-                  setError('Error resetting data. Try again later.');
-                }
-              }}
-              className="bg-red-500 text-white px-1 py-0.5 text-xs rounded hover:bg-red-600"
-              disabled={!isPasswordValid}
-            >
-              Reset
-            </button>
-            <button
-              onClick={syncPlayers}
-              className="bg-blue-500 text-white px-1 py-0.5 text-xs rounded hover:bg-blue-600"
-              disabled={!isPasswordValid}
-            >
-              Sync Players
-            </button>
+            </div>
           </div>
         </div>
       );
