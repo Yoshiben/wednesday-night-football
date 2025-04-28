@@ -55,6 +55,23 @@
       const [motm, setMotm] = useState('');
       const [password, setPassword] = useState('');
       const [error, setError] = useState('');
+      const [isPasswordValid, setIsPasswordValid] = useState(false);
+
+      // Validate password on change
+      useEffect(() => {
+        if (password) {
+          const isValid = hashPassword(password) === HASHED_PASSWORD;
+          setIsPasswordValid(isValid);
+          if (!isValid) {
+            setError('Incorrect password. Please try again.');
+          } else {
+            setError('');
+          }
+        } else {
+          setIsPasswordValid(false);
+          setError('');
+        }
+      }, [password]);
 
       // Fetch data from GitHub on mount
       useEffect(() => {
@@ -93,7 +110,6 @@
               updatedPlayers = [...updatedPlayers, ...newPlayers];
               
               setPlayers(updatedPlayers);
-              localStorage.setItem('players', JSON.stringify(updatedPlayers));
               console.log('Set players from GitHub:', updatedPlayers);
               
               if (data.matches) {
@@ -107,43 +123,7 @@
               }
             } else {
               console.error('Failed to fetch data.json:', response.status);
-              const savedPlayers = localStorage.getItem('players');
-              const savedMatches = localStorage.getItem('matches');
-              if (savedPlayers) {
-                setPlayers(JSON.parse(savedPlayers));
-                console.log('Loaded players from localStorage:', JSON.parse(savedPlayers));
-              } else {
-                console.log('No localStorage players, using defaultPlayers');
-                const defaultPlayerData = defaultPlayers.map(name => ({
-                  name,
-                  points: 0,
-                  games: 0,
-                  wins: 0,
-                  draws: 0,
-                  losses: 0,
-                  motmAwards: 0
-                }));
-                setPlayers(defaultPlayerData);
-                localStorage.setItem('players', JSON.stringify(defaultPlayerData));
-              }
-              if (savedMatches) {
-                setMatches(JSON.parse(savedMatches));
-                console.log('Loaded matches from localStorage:', JSON.parse(savedMatches));
-              } else {
-                console.log('No localStorage matches');
-                setMatches([]);
-                localStorage.setItem('matches', JSON.stringify([]));
-              }
-            }
-          } catch (error) {
-            console.error('Error fetching data.json:', error);
-            const savedPlayers = localStorage.getItem('players');
-            const savedMatches = localStorage.getItem('matches');
-            if (savedPlayers) {
-              setPlayers(JSON.parse(savedPlayers));
-              console.log('Loaded players from localStorage:', JSON.parse(savedPlayers));
-            } else {
-              console.log('No localStorage players, using defaultPlayers');
+              setError('Failed to fetch data. Using default players.');
               const defaultPlayerData = defaultPlayers.map(name => ({
                 name,
                 points: 0,
@@ -154,78 +134,62 @@
                 motmAwards: 0
               }));
               setPlayers(defaultPlayerData);
-              localStorage.setItem('players', JSON.stringify(defaultPlayerData));
             }
-            if (savedMatches) {
-              setMatches(JSON.parse(savedMatches));
-              console.log('Loaded matches from localStorage:', JSON.parse(savedMatches));
-            } else {
-              console.log('No localStorage matches');
-              setMatches([]);
-              localStorage.setItem('matches', JSON.stringify([]));
-            }
+          } catch (error) {
+            console.error('Error fetching data.json:', error);
+            setError('Error fetching data. Using default players.');
+            const defaultPlayerData = defaultPlayers.map(name => ({
+              name,
+              points: 0,
+              games: 0,
+              wins: 0,
+              draws: 0,
+              losses: 0,
+              motmAwards: 0
+            }));
+            setPlayers(defaultPlayerData);
           }
         };
         fetchData();
       }, []);
 
-      // Log state and save to localStorage
+      // Log state
       useEffect(() => {
         console.log('Current players:', players);
         console.log('Current blacks:', blacks);
         console.log('Current greens:', greens);
         console.log('Current MOTM:', motm);
         console.log('Current matches:', matches);
-        localStorage.setItem('players', JSON.stringify(players));
-        localStorage.setItem('matches', JSON.stringify(matches));
       }, [players, matches, blacks, greens, motm]);
 
       // Sync players with data.json
       const syncPlayers = async () => {
-        if (hashPassword(password) !== HASHED_PASSWORD) {
+        if (!isPasswordValid) {
           console.log('Invalid password for sync');
-          setError('Incorrect password');
+          setError('Incorrect password. Please enter the correct password.');
           return;
         }
-        const newPlayers = defaultPlayers.filter(
-          name => !players.some(p => p.name === name)
-        ).map(name => ({
-          name,
-          points: 0,
-          games: 0,
-          wins: 0,
-          draws: 0,
-          losses: 0,
-          motmAwards: 0
-        }));
-        if (newPlayers.length === 0) {
-          console.log('No new players to sync');
-          setError('All players are synced');
-          return;
-        }
-        const updatedPlayers = [...players, ...newPlayers];
         try {
           const response = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               password,
-              players: updatedPlayers,
+              players,
               matches
             })
           });
           if (response.ok) {
             console.log('Synced players to data.json');
-            setPlayers(updatedPlayers);
-            localStorage.setItem('players', JSON.stringify(updatedPlayers));
-            setError('');
+            setError('Players synced successfully!');
+            setTimeout(() => setError(''), 3000);
           } else {
             console.error('Failed to sync players:', await response.json());
-            setError('Failed to sync new players');
+            setError('Failed to sync players. Check password or API.');
           }
         } catch (error) {
           console.error('Error syncing players:', error);
-          setError('Error syncing new players');
+          setError('Error syncing players. Try again later.');
         }
       };
 
@@ -276,9 +240,9 @@
           setError('Please select teams and result');
           return;
         }
-        if (hashPassword(password) !== HASHED_PASSWORD) {
+        if (!isPasswordValid) {
           console.log('Invalid password');
-          setError('Incorrect password');
+          setError('Incorrect password. Please enter the correct password.');
           return;
         }
 
@@ -371,13 +335,15 @@
           const data = await response.json();
           if (response.ok) {
             console.log('Triggered workflow via Vercel API');
+            setError('Match logged successfully!');
+            setTimeout(() => setError(''), 3000);
           } else {
             console.error('Failed to trigger workflow:', data);
             setError(`Failed to update data: ${data.error}`);
           }
         } catch (error) {
           console.error('Error calling Vercel API:', error);
-          setError('Error updating data');
+          setError('Error updating data. Try again later.');
         }
       };
 
@@ -427,7 +393,6 @@
               
               setPlayers(updatedPlayers);
               setMatches(data.matches);
-              localStorage.setItem('players', JSON.stringify(updatedPlayers));
               localStorage.setItem('matches', JSON.stringify(data.matches));
             } else {
               console.error('Invalid JSON format');
@@ -456,7 +421,7 @@
 
           {/* Password Input */}
           <div className="mb-8">
-            <label className="block mb-1">Password (for logging matches)</label>
+            <label className="block mb-1">Password (for logging matches and syncing)</label>
             <input
               type="password"
               value={password}
@@ -465,6 +430,7 @@
               className="w-full p-2 border rounded"
             />
             {error && <p className="text-red-500 mt-2">{error}</p>}
+            {isPasswordValid && <p className="text-green-500 mt-2">Password verified!</p>}
           </div>
 
           {/* Blacks Team */}
@@ -576,7 +542,11 @@
                 </select>
               </div>
               <div className="flex gap-2">
-                <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                <button
+                  type="submit"
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                  disabled={!isPasswordValid}
+                >
                   Log Match
                 </button>
                 <a
@@ -682,9 +652,9 @@
             </label>
             <button
               onClick={async () => {
-                if (hashPassword(password) !== HASHED_PASSWORD) {
+                if (!isPasswordValid) {
                   console.log('Invalid password');
-                  setError('Incorrect password');
+                  setError('Incorrect password. Please enter the correct password.');
                   return;
                 }
 
@@ -706,8 +676,6 @@
                 setBlackPlayers([]);
                 setGreenPlayers([]);
                 setError('');
-                localStorage.removeItem('players');
-                localStorage.removeItem('matches');
 
                 // Call Vercel API for reset
                 try {
@@ -725,22 +693,26 @@
                   const data = await response.json();
                   if (response.ok) {
                     console.log('Triggered workflow via Vercel API for reset');
+                    setError('Data reset successfully!');
+                    setTimeout(() => setError(''), 3000);
                   } else {
                     console.error('Failed to trigger workflow:', data);
                     setError(`Failed to reset data: ${data.error}`);
                   }
                 } catch (error) {
                   console.error('Error calling Vercel API:', error);
-                  setError('Error resetting data');
+                  setError('Error resetting data. Try again later.');
                 }
               }}
               className="bg-red-500 text-white px-1 py-0.5 text-xs rounded hover:bg-red-600"
+              disabled={!isPasswordValid}
             >
               Reset
             </button>
             <button
               onClick={syncPlayers}
               className="bg-blue-500 text-white px-1 py-0.5 text-xs rounded hover:bg-blue-600"
+              disabled={!isPasswordValid}
             >
               Sync Players
             </button>
