@@ -2,42 +2,6 @@
   "players": [
     {
       "name": "Bailey Fulton",
-      "points": 5,
-      "games": 6,
-      "wins": 2,
-      "draws": 1,
-      "losses": 3,
-      "motmAwards": 0
-    },
-    {
-      "name": "Ben Attle",
-      "points": 5,
-      "games": 6,
-      "wins": 2,
-      "draws": 1,
-      "losses": 3,
-      "motmAwards": 0
-    },
-    {
-      "name": "Bradley Travis",
-      "points": 5,
-      "games": 6,
-      "wins": 2,
-      "draws": 1,
-      "losses": 3,
-      "motmAwards": 0
-    },
-    {
-      "name": "Chad Ogden",
-      "points": 5,
-      "games": 6,
-      "wins": 2,
-      "draws": 1,
-      "losses": 3,
-      "motmAwards": 1
-    },
-    {
-      "name": "Craig Ingham",
       "points": 7,
       "games": 7,
       "wins": 3,
@@ -46,28 +10,73 @@
       "motmAwards": 0
     },
     {
+      "name": "Ben Attle",
+      "points": 7,
+      "games": 7,
+      "wins": 3,
+      "draws": 1,
+      "losses": 3,
+      "motmAwards": 1
+    },
+    {
+      "name": "Bradley Travis",
+      "points": 7,
+      "games": 7,
+      "wins": 3,
+      "draws": 1,
+      "losses": 3,
+      "motmAwards": 0
+    },
+    {
+      "name": "Chad Ogden",
+      "points": 7,
+      "games": 7,
+      "wins": 3,
+      "draws": 1,
+      "losses": 3,
+      "motmAwards": 1
+    },
+    {
+      "name": "Craig Ingham",
+      "points": 7,
+      "games": 8,
+      "wins": 3,
+      "draws": 1,
+      "losses": 4,
+      "motmAwards": 0
+    },
+    {
       "name": "Danny Minshull",
       "points": 6,
-      "games": 5,
+      "games": 6,
       "wins": 3,
       "draws": 0,
-      "losses": 2,
+      "losses": 3,
       "motmAwards": 0
     },
     {
       "name": "Dom Johnson",
       "points": 8,
-      "games": 5,
+      "games": 6,
       "wins": 4,
+      "draws": 0,
+      "losses": 2,
+      "motmAwards": 0
+    },
+    {
+      "name": "Jake Halstead",
+      "points": 0,
+      "games": 1,
+      "wins": 0,
       "draws": 0,
       "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "James Shooter",
-      "points": 7,
-      "games": 6,
-      "wins": 3,
+      "points": 9,
+      "games": 7,
+      "wins": 4,
       "draws": 1,
       "losses": 2,
       "motmAwards": 1
@@ -92,9 +101,9 @@
     },
     {
       "name": "Joe Rawlins",
-      "points": 7,
-      "games": 4,
-      "wins": 3,
+      "points": 9,
+      "games": 5,
+      "wins": 4,
       "draws": 1,
       "losses": 0,
       "motmAwards": 0
@@ -163,6 +172,15 @@
       "motmAwards": 0
     },
     {
+      "name": "Test Name",
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
+      "motmAwards": 0
+    },
+    {
       "name": "Tom Kelton",
       "points": 0,
       "games": 1,
@@ -174,41 +192,23 @@
     {
       "name": "Tom Wright",
       "points": 0,
-      "games": 1,
+      "games": 2,
       "wins": 0,
       "draws": 0,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "Zach Murphy",
       "points": 0,
-      "games": 1,
+      "games": 2,
       "wins": 0,
       "draws": 0,
-      "losses": 1,
-      "motmAwards": 0
-    },
-    {
-      "name": "Jake Halstead",
-      "points": 0,
-      "games": 0,
-      "wins": 0,
-      "draws": 0,
-      "losses": 0,
+      "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "Zak Waddington",
-      "points": 0,
-      "games": 0,
-      "wins": 0,
-      "draws": 0,
-      "losses": 0,
-      "motmAwards": 0
-    },
-    {
-      "name": "Test Name",
       "points": 0,
       "games": 0,
       "wins": 0,
@@ -364,6 +364,27 @@
       "result": "blacks",
       "motm": "Joe Duffy",
       "date": "28/04/2025"
+    },
+    {
+      "blacks": [
+        "Jake Halstead",
+        "Craig Ingham",
+        "Danny Minshull",
+        "Dom Johnson",
+        "Tom Wright",
+        "Zach Murphy"
+      ],
+      "greens": [
+        "Bailey Fulton",
+        "Ben Attle",
+        "Bradley Travis",
+        "Chad Ogden",
+        "James Shooter",
+        "Joe Rawlins"
+      ],
+      "result": "greens",
+      "motm": "Ben Attle",
+      "date": "4/28/2025"
     }
   ]
 }
