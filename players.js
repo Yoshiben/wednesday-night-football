@@ -21,6 +21,5 @@ const defaultPlayers = [
   "Tom Kelton", 
   "Tom Wright", 
   "Zach Murphy",
-  "Zak Waddington",
-  "Test Name"
+  "Zak Waddington"
 ];
