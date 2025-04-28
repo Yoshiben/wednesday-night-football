@@ -56,7 +56,7 @@
       const [password, setPassword] = useState('');
       const [error, setError] = useState('');
 
-      // Fetch and sync data from GitHub on mount
+      // Fetch data from GitHub on mount
       useEffect(() => {
         const fetchData = async () => {
           try {
@@ -67,7 +67,7 @@
               const data = await response.json();
               console.log('Fetched data from GitHub:', data);
               
-              // Sync players from data.json with defaultPlayers
+              // Load players from data.json
               let updatedPlayers = data.players ? data.players.map(player => ({
                 name: player.name,
                 points: player.points || 0,
@@ -78,7 +78,7 @@
                 motmAwards: player.motmAwards || 0
               })) : [];
               
-              // Add new players from defaultPlayers if not in data.json
+              // Merge with defaultPlayers to include new players
               const newPlayers = defaultPlayers.filter(
                 name => !updatedPlayers.some(p => p.name === name)
               ).map(name => ({
@@ -90,31 +90,7 @@
                 losses: 0,
                 motmAwards: 0
               }));
-              
-              if (newPlayers.length > 0) {
-                updatedPlayers = [...updatedPlayers, ...newPlayers];
-                // Update data.json via Vercel API
-                try {
-                  const updateResponse = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      password,
-                      players: updatedPlayers,
-                      matches: data.matches || []
-                    })
-                  });
-                  if (updateResponse.ok) {
-                    console.log('Updated data.json with new players');
-                  } else {
-                    console.error('Failed to update data.json:', await updateResponse.json());
-                    setError('Failed to sync new players');
-                  }
-                } catch (error) {
-                  console.error('Error updating data.json:', error);
-                  setError('Error syncing new players');
-                }
-              }
+              updatedPlayers = [...updatedPlayers, ...newPlayers];
               
               setPlayers(updatedPlayers);
               localStorage.setItem('players', JSON.stringify(updatedPlayers));
@@ -203,6 +179,55 @@
         localStorage.setItem('players', JSON.stringify(players));
         localStorage.setItem('matches', JSON.stringify(matches));
       }, [players, matches, blacks, greens, motm]);
+
+      // Sync players with data.json
+      const syncPlayers = async () => {
+        if (hashPassword(password) !== HASHED_PASSWORD) {
+          console.log('Invalid password for sync');
+          setError('Incorrect password');
+          return;
+        }
+        const newPlayers = defaultPlayers.filter(
+          name => !players.some(p => p.name === name)
+        ).map(name => ({
+          name,
+          points: 0,
+          games: 0,
+          wins: 0,
+          draws: 0,
+          losses: 0,
+          motmAwards: 0
+        }));
+        if (newPlayers.length === 0) {
+          console.log('No new players to sync');
+          setError('All players are synced');
+          return;
+        }
+        const updatedPlayers = [...players, ...newPlayers];
+        try {
+          const response = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              password,
+              players: updatedPlayers,
+              matches
+            })
+          });
+          if (response.ok) {
+            console.log('Synced players to data.json');
+            setPlayers(updatedPlayers);
+            localStorage.setItem('players', JSON.stringify(updatedPlayers));
+            setError('');
+          } else {
+            console.error('Failed to sync players:', await response.json());
+            setError('Failed to sync new players');
+          }
+        } catch (error) {
+          console.error('Error syncing players:', error);
+          setError('Error syncing new players');
+        }
+      };
 
       // Add players to Blacks
       const addToBlacks = (e) => {
@@ -378,7 +403,6 @@
             const data = JSON.parse(event.target.result);
             console.log('Imported data:', data);
             if (data.players && data.matches) {
-              // Sync imported players with defaultPlayers
               let updatedPlayers = data.players.map(player => ({
                 name: player.name,
                 points: player.points || 0,
@@ -639,7 +663,7 @@
             </table>
           </div>
 
-          {/* Export, Import, and Reset Buttons */}
+          {/* Export, Import, Reset, and Sync Buttons */}
           <div className="mt-4 flex justify-center gap-2">
             <button
               onClick={exportData}
@@ -713,6 +737,12 @@
               className="bg-red-500 text-white px-1 py-0.5 text-xs rounded hover:bg-red-600"
             >
               Reset
+            </button>
+            <button
+              onClick={syncPlayers}
+              className="bg-blue-500 text-white px-1 py-0.5 text-xs rounded hover:bg-blue-600"
+            >
+              Sync Players
             </button>
           </div>
         </div>
