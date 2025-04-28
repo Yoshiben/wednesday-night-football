@@ -10,15 +10,19 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="./players.js?t=<%= new Date().getTime() %>"></script>
   <style>
-    /* Custom highlight for Blacks select */
-    select.blacks-select option:checked {
+    /* Custom highlight for selected players in Blacks list */
+    .blacks-list .player-item.selected {
       background-color: #000000;
       color: #ffffff;
     }
-    /* Custom highlight for Greens select */
-    select.greens-select option:checked {
+    /* Custom highlight for selected players in Greens list */
+    .greens-list .player-item.selected {
       background-color: #22c55e;
       color: #ffffff;
+    }
+    /* Hover effect for player items */
+    .player-item:hover {
+      background-color: #e5e7eb; /* Tailwind gray-200 */
     }
   </style>
 </head>
@@ -96,7 +100,6 @@
               const data = await response.json();
               console.log('Fetched data from GitHub:', data);
               
-              // Load players from data.json
               let updatedPlayers = data.players ? data.players.map(player => ({
                 name: player.name,
                 points: player.points || 0,
@@ -107,7 +110,6 @@
                 motmAwards: player.motmAwards || 0
               })) : [];
               
-              // Merge with defaultPlayers to include new players
               const newPlayers = defaultPlayers.filter(
                 name => !updatedPlayers.some(p => p.name === name)
               ).map(name => ({
@@ -202,6 +204,42 @@
         } catch (error) {
           console.error('Error syncing players:', error);
           setError('Error syncing players. Try again later.');
+        }
+      };
+
+      // Handle click for Blacks selection
+      const handleBlackPlayerClick = (playerName, e) => {
+        if (e.ctrlKey || e.metaKey) {
+          // Ctrl+click or Cmd+click for multiple selection
+          setBlackPlayers(prev =>
+            prev.includes(playerName)
+              ? prev.filter(p => p !== playerName)
+              : [...prev, playerName]
+          );
+        } else {
+          // Single click to toggle selection
+          setBlackPlayers(prev =>
+            prev.includes(playerName)
+              ? prev.filter(p => p !== playerName)
+              : [playerName]
+          );
+        }
+      };
+
+      // Handle click for Greens selection
+      const handleGreenPlayerClick = (playerName, e) => {
+        if (e.ctrlKey || e.metaKey) {
+          setGreenPlayers(prev =>
+            prev.includes(playerName)
+              ? prev.filter(p => p !== playerName)
+              : [...prev, playerName]
+          );
+        } else {
+          setGreenPlayers(prev =>
+            prev.includes(playerName)
+              ? prev.filter(p => p !== playerName)
+              : [playerName]
+          );
         }
       };
 
@@ -331,7 +369,6 @@
         setGreenPlayers([]);
         setError('');
 
-        // Call Vercel API
         try {
           const response = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
             method: 'POST',
@@ -450,19 +487,22 @@
               {/* Blacks Team */}
               <div className="mb-8">
                 <form onSubmit={addToBlacks} className="flex gap-2">
-                  <select
-                    multiple
-                    value={blackPlayers}
-                    onChange={(e) => setBlackPlayers([...e.target.selectedOptions].map(o => o.value))}
-                    className="blacks-select flex-1 p-2 border rounded h-32"
-                  >
+                  <div className="blacks-list flex-1 border rounded h-32 overflow-y-auto">
                     {players
                       .filter(p => !blacks.includes(p.name) && !greens.includes(p.name))
                       .sort((a, b) => a.name.localeCompare(b.name))
                       .map(player => (
-                        <option key={player.name} value={player.name}>{player.name}</option>
+                        <div
+                          key={player.name}
+                          className={`player-item p-2 cursor-pointer ${
+                            blackPlayers.includes(player.name) ? 'selected' : ''
+                          }`}
+                          onClick={(e) => handleBlackPlayerClick(player.name, e)}
+                        >
+                          {player.name}
+                        </div>
                       ))}
-                  </select>
+                  </div>
                   <button
                     type="submit"
                     className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
@@ -490,19 +530,22 @@
               {/* Greens Team */}
               <div className="mb-8">
                 <form onSubmit={addToGreens} className="flex gap-2">
-                  <select
-                    multiple
-                    value={greenPlayers}
-                    onChange={(e) => setGreenPlayers([...e.target.selectedOptions].map(o => o.value))}
-                    className="greens-select flex-1 p-2 border rounded h-32"
-                  >
+                  <div className="greens-list flex-1 border rounded h-32 overflow-y-auto">
                     {players
                       .filter(p => !greens.includes(p.name) && !blacks.includes(p.name))
                       .sort((a, b) => a.name.localeCompare(b.name))
                       .map(player => (
-                        <option key={player.name} value={player.name}>{player.name}</option>
+                        <div
+                          key={player.name}
+                          className={`player-item p-2 cursor-pointer ${
+                            greenPlayers.includes(player.name) ? 'selected' : ''
+                          }`}
+                          onClick={(e) => handleGreenPlayerClick(player.name, e)}
+                        >
+                          {player.name}
+                        </div>
                       ))}
-                  </select>
+                  </div>
                   <button
                     type="submit"
                     className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
@@ -696,7 +739,6 @@
                     setGreenPlayers([]);
                     setError('');
 
-                    // Call Vercel API for reset
                     try {
                       const response = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
                         method: 'POST',
