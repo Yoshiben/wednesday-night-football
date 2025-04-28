@@ -9,6 +9,18 @@
   <script src="https://unpkg.com/@babel/standalone@7.22.5/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="./players.js?t=<%= new Date().getTime() %>"></script>
+  <style>
+    /* Custom highlight for Blacks select */
+    select.blacks-select option:checked {
+      background-color: #000000;
+      color: #ffffff;
+    }
+    /* Custom highlight for Greens select */
+    select.greens-select option:checked {
+      background-color: #22c55e;
+      color: #ffffff;
+    }
+  </style>
 </head>
 <body>
   <div id="root">
@@ -442,7 +454,7 @@
                     multiple
                     value={blackPlayers}
                     onChange={(e) => setBlackPlayers([...e.target.selectedOptions].map(o => o.value))}
-                    className="flex-1 p-2 border rounded h-32"
+                    className="blacks-select flex-1 p-2 border rounded h-32"
                   >
                     {players
                       .filter(p => !blacks.includes(p.name) && !greens.includes(p.name))
@@ -482,7 +494,7 @@
                     multiple
                     value={greenPlayers}
                     onChange={(e) => setGreenPlayers([...e.target.selectedOptions].map(o => o.value))}
-                    className="flex-1 p-2 border rounded h-32"
+                    className="greens-select flex-1 p-2 border rounded h-32"
                   >
                     {players
                       .filter(p => !greens.includes(p.name) && !blacks.includes(p.name))
