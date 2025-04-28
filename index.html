@@ -67,6 +67,8 @@
       const [greens, setGreens] = useState([]);
       const [blackPlayers, setBlackPlayers] = useState([]);
       const [greenPlayers, setGreenPlayers] = useState([]);
+      const [lastClickedBlack, setLastClickedBlack] = useState(null);
+      const [lastClickedGreen, setLastClickedGreen] = useState(null);
       const [result, setResult] = useState('');
       const [motm, setMotm] = useState('');
       const [password, setPassword] = useState('');
@@ -209,37 +211,68 @@
 
       // Handle click for Blacks selection
       const handleBlackPlayerClick = (playerName, e) => {
-        if (e.ctrlKey || e.metaKey) {
-          // Ctrl+click or Cmd+click for multiple selection
+        const availablePlayers = players
+          .filter(p => !blacks.includes(p.name) && !greens.includes(p.name))
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map(p => p.name);
+
+        if (e.shiftKey && lastClickedBlack) {
+          // Shift+click: Select range between last clicked and current
+          const currentIndex = availablePlayers.indexOf(playerName);
+          const lastIndex = availablePlayers.indexOf(lastClickedBlack);
+          const start = Math.min(currentIndex, lastIndex);
+          const end = Math.max(currentIndex, lastIndex);
+          const range = availablePlayers.slice(start, end + 1);
+          setBlackPlayers(prev => {
+            // Add range to existing selection without duplicates
+            const newSelection = [...new Set([...prev, ...range])];
+            return newSelection;
+          });
+        } else if (e.ctrlKey || e.metaKey) {
+          // Ctrl+click or Cmd+click: Toggle individual player in selection
           setBlackPlayers(prev =>
             prev.includes(playerName)
               ? prev.filter(p => p !== playerName)
               : [...prev, playerName]
           );
+          setLastClickedBlack(playerName);
         } else {
-          // Single click to toggle selection
-          setBlackPlayers(prev =>
-            prev.includes(playerName)
-              ? prev.filter(p => p !== playerName)
-              : [playerName]
-          );
+          // Single click: Select only this player
+          setBlackPlayers([playerName]);
+          setLastClickedBlack(playerName);
         }
       };
 
       // Handle click for Greens selection
       const handleGreenPlayerClick = (playerName, e) => {
-        if (e.ctrlKey || e.metaKey) {
+        const availablePlayers = players
+          .filter(p => !greens.includes(p.name) && !blacks.includes(p.name))
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map(p => p.name);
+
+        if (e.shiftKey && lastClickedGreen) {
+          // Shift+click: Select range between last clicked and current
+          const currentIndex = availablePlayers.indexOf(playerName);
+          const lastIndex = availablePlayers.indexOf(lastClickedGreen);
+          const start = Math.min(currentIndex, lastIndex);
+          const end = Math.max(currentIndex, lastIndex);
+          const range = availablePlayers.slice(start, end + 1);
+          setGreenPlayers(prev => {
+            const newSelection = [...new Set([...prev, ...range])];
+            return newSelection;
+          });
+        } else if (e.ctrlKey || e.metaKey) {
+          // Ctrl+click or Cmd+click: Toggle individual player in selection
           setGreenPlayers(prev =>
             prev.includes(playerName)
               ? prev.filter(p => p !== playerName)
               : [...prev, playerName]
           );
+          setLastClickedGreen(playerName);
         } else {
-          setGreenPlayers(prev =>
-            prev.includes(playerName)
-              ? prev.filter(p => p !== playerName)
-              : [playerName]
-          );
+          // Single click: Select only this player
+          setGreenPlayers([playerName]);
+          setLastClickedGreen(playerName);
         }
       };
 
@@ -253,6 +286,7 @@
           if (blacks.length + newPlayers.length <= 6) {
             setBlacks(prev => [...prev, ...newPlayers]);
             setBlackPlayers([]);
+            setLastClickedBlack(null);
           }
         }
       };
@@ -267,6 +301,7 @@
           if (greens.length + newPlayers.length <= 6) {
             setGreens(prev => [...prev, ...newPlayers]);
             setGreenPlayers([]);
+            setLastClickedGreen(null);
           }
         }
       };
@@ -367,6 +402,8 @@
         setMotm('');
         setBlackPlayers([]);
         setGreenPlayers([]);
+        setLastClickedBlack(null);
+        setLastClickedGreen(null);
         setError('');
 
         try {
@@ -737,6 +774,8 @@
                     setMotm('');
                     setBlackPlayers([]);
                     setGreenPlayers([]);
+                    setLastClickedBlack(null);
+                    setLastClickedGreen(null);
                     setError('');
 
                     try {
