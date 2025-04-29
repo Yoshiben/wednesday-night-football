@@ -43,7 +43,7 @@
     };
 
     // Hardcoded hashed password
-    const HASHED_PASSWORD = '515936937';
+    const HASHED_PASSWORD = '48690';
 
     const App = () => {
       const [players, setPlayers] = useState(() => {
@@ -64,8 +64,8 @@
       const [blackPlayers, setBlackPlayers] = useState([]);
       const [greenPlayers, setGreenPlayers] = useState([]);
       const [result, setResult] = useState('');
-      const [blacksScore, setBlacksScore] = useState(0); // New state for Blacks score
-      const [greensScore, setGreensScore] = useState(0); // New state for Greens score
+      const [blacksScore, setBlacksScore] = useState(0);
+      const [greensScore, setGreensScore] = useState(0);
       const [motm, setMotm] = useState('');
       const [password, setPassword] = useState('');
       const [error, setError] = useState('');
@@ -249,14 +249,35 @@
       const logMatch = async (e) => {
         e.preventDefault();
         console.log('Logging match:', { blacks, greens, result, blacksScore, greensScore, motm });
+
+        // Validate teams and result
         if (blacks.length === 0 || greens.length === 0 || !result) {
           console.log('Invalid match data');
           setError('Please select teams and result');
           return;
         }
+
+        // Validate password
         if (!isPasswordValid) {
           console.log('Invalid password');
           setError('Incorrect password. Please enter the correct password.');
+          return;
+        }
+
+        // Validate scores based on result
+        if (result === 'draw' && blacksScore !== greensScore) {
+          console.log('Invalid score for draw: scores must be equal');
+          setError('Scores must be equal for a draw.');
+          return;
+        }
+        if (result === 'blacks' && blacksScore <= greensScore) {
+          console.log('Invalid score for Blacks win: Blacks score must be higher');
+          setError('Blacks score must be higher than Greens for a Blacks win.');
+          return;
+        }
+        if (result === 'greens' && greensScore <= blacksScore) {
+          console.log('Invalid score for Greens win: Greens score must be higher');
+          setError('Greens score must be higher than Blacks for a Greens win.');
           return;
         }
 
@@ -320,7 +341,7 @@
           }
         }
 
-        const score = `${blacksScore}-${greensScore}`; // Combine scores into "X-Y" format
+        const score = `${blacksScore}-${greensScore}`;
         const newMatch = { blacks, greens, result, score, motm, date: new Date().toLocaleDateString() };
         const updatedMatches = [...matches, newMatch];
 
@@ -329,8 +350,8 @@
         setBlacks([]);
         setGreens([]);
         setResult('');
-        setBlacksScore(0); // Reset Blacks score
-        setGreensScore(0); // Reset Greens score
+        setBlacksScore(0);
+        setGreensScore(0);
         setMotm('');
         setBlackPlayers([]);
         setGreenPlayers([]);
@@ -348,7 +369,7 @@
               players: updatedPlayers,
               matches: updatedMatches.map(match => ({
                 ...match,
-                score: match.score || undefined // Ensure backward compatibility
+                score: match.score || undefined
               }))
             })
           });
@@ -548,9 +569,9 @@
                       value={result}
                       onChange={(e) => {
                         setResult(e.target.value);
-                        setBlacksScore(0); // Reset Blacks score
-                        setGreensScore(0); // Reset Greens score
-                        setMotm(''); // Reset MOTM
+                        setBlacksScore(0);
+                        setGreensScore(0);
+                        setMotm('');
                       }}
                       className="w-full p-2 border rounded"
                     >
@@ -737,8 +758,8 @@
                     setBlacks([]);
                     setGreens([]);
                     setResult('');
-                    setBlacksScore(0); // Reset Blacks score
-                    setGreensScore(0); // Reset Greens score
+                    setBlacksScore(0);
+                    setGreensScore(0);
                     setMotm('');
                     setBlackPlayers([]);
                     setGreenPlayers([]);
