@@ -11,45 +11,45 @@
     },
     {
       "name": "Ben Attle",
-      "points": 0,
-      "games": 0,
-      "wins": 0,
+      "points": 2,
+      "games": 1,
+      "wins": 1,
       "draws": 0,
       "losses": 0,
-      "motmAwards": 0
+      "motmAwards": 1
     },
     {
       "name": "Bradley Travis",
-      "points": 0,
-      "games": 0,
-      "wins": 0,
+      "points": 2,
+      "games": 1,
+      "wins": 1,
       "draws": 0,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Chad Ogden",
-      "points": 0,
-      "games": 0,
-      "wins": 0,
+      "points": 2,
+      "games": 1,
+      "wins": 1,
       "draws": 0,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Craig Ingham",
-      "points": 0,
-      "games": 0,
-      "wins": 0,
+      "points": 2,
+      "games": 1,
+      "wins": 1,
       "draws": 0,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Danny Minshull",
-      "points": 0,
-      "games": 0,
-      "wins": 0,
+      "points": 2,
+      "games": 1,
+      "wins": 1,
       "draws": 0,
       "losses": 0,
       "motmAwards": 0
@@ -74,9 +74,9 @@
     },
     {
       "name": "James Shooter",
-      "points": 0,
-      "games": 0,
-      "wins": 0,
+      "points": 2,
+      "games": 1,
+      "wins": 1,
       "draws": 0,
       "losses": 0,
       "motmAwards": 0
@@ -138,10 +138,10 @@
     {
       "name": "Leon Khan",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     },
     {
@@ -165,48 +165,71 @@
     {
       "name": "Sohrob Rostampour",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Tom Kelton",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Tom Wright",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Zach Murphy",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Zak Waddington",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     }
   ],
-  "matches": []
+  "matches": [
+    {
+      "blacks": [
+        "Ben Attle",
+        "Bradley Travis",
+        "Chad Ogden",
+        "Craig Ingham",
+        "Danny Minshull",
+        "James Shooter"
+      ],
+      "greens": [
+        "Sohrob Rostampour",
+        "Tom Kelton",
+        "Tom Wright",
+        "Zach Murphy",
+        "Zak Waddington",
+        "Leon Khan"
+      ],
+      "result": "blacks",
+      "score": "3-1",
+      "motm": "Ben Attle",
+      "date": "29/04/2025"
+    }
+  ]
 }
