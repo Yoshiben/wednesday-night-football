@@ -71,6 +71,7 @@
       const [error, setError] = useState('');
       const [isPasswordValid, setIsPasswordValid] = useState(false);
       const [isLoggingMatch, setIsLoggingMatch] = useState(false);
+      const [lastSyncTime, setLastSyncTime] = useState(0);
 
       // Validate password on change
       useEffect(() => {
@@ -88,94 +89,67 @@
         }
       }, [password]);
 
-      // Fetch data from GitHub on mount and merge with localStorage
+      // Load initial data (prioritize localStorage, then sync with data.json)
       useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await fetch('data.json?t=' + new Date().getTime(), {
-              cache: 'no-store'
-            });
-            if (response.ok) {
-              const data = await response.json();
-              console.log('Fetched data from GitHub:', data);
-              
-              // Load players from data.json
-              let updatedPlayers = data.players ? data.players.map(player => ({
-                name: player.name,
-                points: player.points || 0,
-                games: player.games || 0,
-                wins: player.wins || 0,
-                draws: player.draws || 0,
-                losses: player.losses || 0,
-                motmAwards: player.motmAwards || 0
-              })) : [];
-              
-              // Merge with defaultPlayers to include new players
-              const newPlayers = defaultPlayers.filter(
-                name => !updatedPlayers.some(p => p.name === name)
-              ).map(name => ({
-                name,
-                points: 0,
-                games: 0,
-                wins: 0,
-                draws: 0,
-                losses: 0,
-                motmAwards: 0
-              }));
-              updatedPlayers = [...updatedPlayers, ...newPlayers].sort((a, b) => a.name.localeCompare(b.name));
-              
-              setPlayers(updatedPlayers);
-              console.log('Set players from GitHub:', updatedPlayers);
-              
-              // Load matches from data.json
-              let fetchedMatches = data.matches || [];
-              
-              // Load matches from localStorage
-              const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
-              console.log('Loaded matches from localStorage:', localMatches);
-              
-              // Merge matches (avoid duplicates based on date and teams)
-              const matchSignature = (match) => `${match.date}-${match.blacks.join(',')}-${match.greens.join(',')}`;
-              const matchMap = new Map();
-              
-              // Add fetched matches
-              fetchedMatches.forEach(match => {
-                matchMap.set(matchSignature(match), match);
-              });
-              
-              // Add local matches (only if not already in fetched matches)
-              localMatches.forEach(match => {
-                if (!matchMap.has(matchSignature(match))) {
-                  matchMap.set(matchSignature(match), match);
-                }
-              });
-              
-              const mergedMatches = Array.from(matchMap.values());
-              setMatches(mergedMatches);
-              localStorage.setItem('matches', JSON.stringify(mergedMatches));
-              console.log('Merged matches:', mergedMatches);
-            } else {
-              console.error('Failed to fetch data.json:', response.status);
-              setError('Failed to fetch data. Using default players.');
-              const defaultPlayerData = defaultPlayers.map(name => ({
-                name,
-                points: 0,
-                games: 0,
-                wins: 0,
-                draws: 0,
-                losses: 0,
-                motmAwards: 0
-              })).sort((a, b) => a.name.localeCompare(b.name));
-              setPlayers(defaultPlayerData);
-              
-              // Fallback to localStorage matches
-              const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
-              setMatches(localMatches);
-            }
-          } catch (error) {
-            console.error('Error fetching data.json:', error);
-            setError('Error fetching data. Using default players.');
-            const defaultPlayerData = defaultPlayers.map(name => ({
+        const loadData = async () => {
+          // Load matches from localStorage first
+          const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
+          setMatches(localMatches);
+          console.log('Loaded matches from localStorage:', localMatches);
+
+          // Load players from localStorage or default
+          const localPlayers = JSON.parse(localStorage.getItem('players') || '[]');
+          let updatedPlayers = localPlayers.length > 0 ? localPlayers : defaultPlayers.map(name => ({
+            name,
+            points: 0,
+            games: 0,
+            wins: 0,
+            draws: 0,
+            losses: 0,
+            motmAwards: 0
+          })).sort((a, b) => a.name.localeCompare(b.name));
+          setPlayers(updatedPlayers);
+          console.log('Loaded players from localStorage:', updatedPlayers);
+
+          // Sync with data.json
+          await syncWithServer();
+        };
+        loadData();
+      }, []);
+
+      // Periodically sync with server (every 30 seconds if no recent sync)
+      useEffect(() => {
+        const interval = setInterval(() => {
+          if (Date.now() - lastSyncTime > 30000) {
+            syncWithServer();
+          }
+        }, 10000);
+        return () => clearInterval(interval);
+      }, [lastSyncTime]);
+
+      // Sync with server (fetch data.json and merge with local data)
+      const syncWithServer = async () => {
+        try {
+          const response = await fetch('data.json?t=' + new Date().getTime(), {
+            cache: 'no-store'
+          });
+          if (response.ok) {
+            const data = await response.json();
+            console.log('Fetched data from GitHub:', data);
+
+            // Update players
+            let updatedPlayers = data.players ? data.players.map(player => ({
+              name: player.name,
+              points: player.points || 0,
+              games: player.games || 0,
+              wins: player.wins || 0,
+              draws: player.draws || 0,
+              losses: player.losses || 0,
+              motmAwards: player.motmAwards || 0
+            })) : [];
+            const newPlayers = defaultPlayers.filter(
+              name => !updatedPlayers.some(p => p.name === name)
+            ).map(name => ({
               name,
               points: 0,
               games: 0,
@@ -183,16 +157,30 @@
               draws: 0,
               losses: 0,
               motmAwards: 0
-            })).sort((a, b) => a.name.localeCompare(b.name));
-            setPlayers(defaultPlayerData);
-            
-            // Fallback to localStorage matches
+            }));
+            updatedPlayers = [...updatedPlayers, ...newPlayers].sort((a, b) => a.name.localeCompare(b.name));
+            setPlayers(updatedPlayers);
+            localStorage.setItem('players', JSON.stringify(updatedPlayers));
+            console.log('Synced players from GitHub:', updatedPlayers);
+
+            // Update matches (only if data.json has more matches)
+            const serverMatches = data.matches || [];
             const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
-            setMatches(localMatches);
+            if (serverMatches.length > localMatches.length) {
+              setMatches(serverMatches);
+              localStorage.setItem('matches', JSON.stringify(serverMatches));
+              console.log('Synced matches from GitHub:', serverMatches);
+            }
+            setLastSyncTime(Date.now());
+          } else {
+            console.error('Failed to fetch data.json:', response.status);
+            setError('Failed to fetch server data. Using local data.');
           }
-        };
-        fetchData();
-      }, []);
+        } catch (error) {
+          console.error('Error fetching data.json:', error);
+          setError('Error fetching server data. Using local data.');
+        }
+      };
 
       // Log state
       useEffect(() => {
@@ -203,7 +191,7 @@
         console.log('Current matches:', matches);
       }, [players, matches, blacks, greens, motm]);
 
-      // Sync players with data.json
+      // Sync players with data.json (manual sync)
       const syncPlayers = async () => {
         if (!isPasswordValid) {
           console.log('Invalid password for sync');
@@ -222,10 +210,12 @@
           });
           if (response.ok) {
             console.log('Synced players to data.json');
-            setError('Players synced successfully!');
+            setError('Players synced successfully! Waiting for server update...');
+            // Wait for GitHub Actions workflow to complete (e.g., 30 seconds)
+            await new Promise(resolve => setTimeout(resolve, 30000));
+            await syncWithServer();
+            setError('Sync completed!');
             setTimeout(() => setError(''), 3000);
-            // Clear localStorage matches after successful sync
-            localStorage.setItem('matches', JSON.stringify(matches));
           } else {
             console.error('Failed to sync players:', await response.json());
             setError('Failed to sync players. Check password or API.');
@@ -379,7 +369,9 @@
 
         // Update state and localStorage immediately
         setMatches(updatedMatches);
+        setPlayers(updatedPlayers);
         localStorage.setItem('matches', JSON.stringify(updatedMatches));
+        localStorage.setItem('players', JSON.stringify(updatedPlayers));
 
         // Call Vercel API
         try {
@@ -400,10 +392,12 @@
           const data = await response.json();
           if (response.ok) {
             console.log('Triggered workflow via Vercel API');
-            setError('Match logged successfully!');
+            setError('Match logged successfully! Waiting for server update...');
+            // Wait for GitHub Actions workflow to complete (e.g., 30 seconds)
+            await new Promise(resolve => setTimeout(resolve, 30000));
+            await syncWithServer();
+            setError('Match synced with server!');
             setTimeout(() => setError(''), 3000);
-            // Clear localStorage matches after successful sync
-            localStorage.setItem('matches', JSON.stringify(updatedMatches));
           } else {
             console.error('Failed to trigger workflow:', data);
             setError(`Failed to update data: ${data.error}`);
@@ -412,7 +406,6 @@
           console.error('Error calling Vercel API:', error);
           setError('Error updating data. Try again later.');
         } finally {
-          setPlayers(updatedPlayers);
           setBlacks([]);
           setGreens([]);
           setResult('');
@@ -472,6 +465,7 @@
               setPlayers(updatedPlayers);
               setMatches(data.matches);
               localStorage.setItem('matches', JSON.stringify(data.matches));
+              localStorage.setItem('players', JSON.stringify(updatedPlayers));
             } else {
               console.error('Invalid JSON format');
               setError('Invalid JSON format');
@@ -802,6 +796,9 @@
                     setGreenPlayers([]);
                     setError('');
 
+                    localStorage.setItem('players', JSON.stringify(resetPlayers));
+                    localStorage.setItem('matches', JSON.stringify([]));
+
                     // Call Vercel API for reset
                     try {
                       const response = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
@@ -818,9 +815,11 @@
                       const data = await response.json();
                       if (response.ok) {
                         console.log('Triggered workflow via Vercel API for reset');
-                        setError('Data reset successfully!');
+                        setError('Data reset successfully! Waiting for server update...');
+                        await new Promise(resolve => setTimeout(resolve, 30000));
+                        await syncWithServer();
+                        setError('Reset completed!');
                         setTimeout(() => setError(''), 3000);
-                        localStorage.setItem('matches', JSON.stringify([]));
                       } else {
                         console.error('Failed to trigger workflow:', data);
                         setError(`Failed to reset data: ${data.error}`);
