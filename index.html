@@ -198,20 +198,21 @@
           setError('Incorrect password. Please enter the correct password.');
           return;
         }
+        // Filter players to only include those with games > 0
+        const filteredPlayers = players.filter(player => player.games > 0);
         try {
           const response = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               password,
-              players,
+              players: filteredPlayers,
               matches
             })
           });
           if (response.ok) {
             console.log('Synced players to data.json');
             setError('Players synced successfully! Waiting for server update...');
-            // Wait for GitHub Actions workflow to complete (reduced to 20 seconds)
             await new Promise(resolve => setTimeout(resolve, 20000));
             await syncWithServer();
             setError('Sync completed!');
@@ -382,6 +383,9 @@
         localStorage.setItem('matches', JSON.stringify(updatedMatches));
         localStorage.setItem('players', JSON.stringify(updatedPlayers));
 
+        // Filter players to only include those with games > 0
+        const filteredPlayers = updatedPlayers.filter(player => player.games > 0);
+
         // Call Vercel API
         try {
           const response = await fetch('https://wednesday-night-football.vercel.app/api/dispatch', {
@@ -391,7 +395,7 @@
             },
             body: JSON.stringify({
               password,
-              players: updatedPlayers,
+              players: filteredPlayers,
               matches: updatedMatches.map(match => ({
                 ...match,
                 score: match.score || undefined
@@ -402,7 +406,6 @@
           if (response.ok) {
             console.log('Triggered workflow via Vercel API');
             setError('Match logged successfully! Waiting for server update...');
-            // Wait for GitHub Actions workflow to complete (reduced to 20 seconds)
             await new Promise(resolve => setTimeout(resolve, 20000));
             await syncWithServer();
             setError('Match synced with server!');
@@ -825,7 +828,7 @@
                         },
                         body: JSON.stringify({
                           password,
-                          players: resetPlayers,
+                          players: resetPlayers.filter(player => player.games > 0),
                           matches: []
                         })
                       });
