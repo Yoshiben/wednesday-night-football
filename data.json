@@ -101,9 +101,9 @@
     },
     {
       "name": "Joe Rawlins",
-      "points": 0,
-      "games": 1,
-      "wins": 0,
+      "points": 2,
+      "games": 2,
+      "wins": 1,
       "draws": 0,
       "losses": 1,
       "motmAwards": 0
@@ -111,32 +111,14 @@
     {
       "name": "John Sheard (Shed)",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Jorge Westin-Pearson",
-      "points": 0,
-      "games": 0,
-      "wins": 0,
-      "draws": 0,
-      "losses": 0,
-      "motmAwards": 0
-    },
-    {
-      "name": "Kyle Carrington",
-      "points": 0,
-      "games": 0,
-      "wins": 0,
-      "draws": 0,
-      "losses": 0,
-      "motmAwards": 0
-    },
-    {
-      "name": "Leon Khan",
       "points": 0,
       "games": 1,
       "wins": 0,
@@ -145,64 +127,82 @@
       "motmAwards": 0
     },
     {
-      "name": "Niall Raymond",
+      "name": "Kyle Carrington",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
+      "motmAwards": 0
+    },
+    {
+      "name": "Leon Khan",
+      "points": 0,
+      "games": 2,
+      "wins": 0,
+      "draws": 0,
+      "losses": 2,
+      "motmAwards": 0
+    },
+    {
+      "name": "Niall Raymond",
+      "points": 0,
+      "games": 1,
+      "wins": 0,
+      "draws": 0,
+      "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Ross Barney",
       "points": 0,
-      "games": 0,
+      "games": 1,
       "wins": 0,
       "draws": 0,
-      "losses": 0,
+      "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Sohrob Rostampour",
-      "points": 0,
-      "games": 1,
-      "wins": 0,
+      "points": 2,
+      "games": 2,
+      "wins": 1,
       "draws": 0,
       "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Tom Kelton",
-      "points": 0,
-      "games": 1,
-      "wins": 0,
+      "points": 2,
+      "games": 2,
+      "wins": 1,
       "draws": 0,
       "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Tom Wright",
-      "points": 0,
-      "games": 1,
-      "wins": 0,
+      "points": 2,
+      "games": 2,
+      "wins": 1,
       "draws": 0,
       "losses": 1,
-      "motmAwards": 0
+      "motmAwards": 1
     },
     {
       "name": "Zach Murphy",
-      "points": 0,
-      "games": 1,
-      "wins": 0,
+      "points": 2,
+      "games": 2,
+      "wins": 1,
       "draws": 0,
       "losses": 1,
       "motmAwards": 0
     },
     {
       "name": "Zak Waddington",
-      "points": 0,
-      "games": 1,
-      "wins": 0,
+      "points": 2,
+      "games": 2,
+      "wins": 1,
       "draws": 0,
       "losses": 1,
       "motmAwards": 0
@@ -251,6 +251,28 @@
       "result": "blacks",
       "score": "4-0",
       "motm": "Ben Attle",
+      "date": "29/04/2025"
+    },
+    {
+      "blacks": [
+        "John Sheard (Shed)",
+        "Jorge Westin-Pearson",
+        "Kyle Carrington",
+        "Leon Khan",
+        "Niall Raymond",
+        "Ross Barney"
+      ],
+      "greens": [
+        "Joe Rawlins",
+        "Sohrob Rostampour",
+        "Tom Kelton",
+        "Tom Wright",
+        "Zach Murphy",
+        "Zak Waddington"
+      ],
+      "result": "greens",
+      "score": "5-8",
+      "motm": "Tom Wright",
       "date": "29/04/2025"
     }
   ]
