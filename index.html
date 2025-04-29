@@ -64,7 +64,8 @@
       const [blackPlayers, setBlackPlayers] = useState([]);
       const [greenPlayers, setGreenPlayers] = useState([]);
       const [result, setResult] = useState('');
-      const [score, setScore] = useState(''); // New state for score
+      const [blacksScore, setBlacksScore] = useState(0); // New state for Blacks score
+      const [greensScore, setGreensScore] = useState(0); // New state for Greens score
       const [motm, setMotm] = useState('');
       const [password, setPassword] = useState('');
       const [error, setError] = useState('');
@@ -247,7 +248,7 @@
       // Log a match and trigger Vercel API
       const logMatch = async (e) => {
         e.preventDefault();
-        console.log('Logging match:', { blacks, greens, result, score, motm });
+        console.log('Logging match:', { blacks, greens, result, blacksScore, greensScore, motm });
         if (blacks.length === 0 || greens.length === 0 || !result) {
           console.log('Invalid match data');
           setError('Please select teams and result');
@@ -319,6 +320,7 @@
           }
         }
 
+        const score = `${blacksScore}-${greensScore}`; // Combine scores into "X-Y" format
         const newMatch = { blacks, greens, result, score, motm, date: new Date().toLocaleDateString() };
         const updatedMatches = [...matches, newMatch];
 
@@ -327,7 +329,8 @@
         setBlacks([]);
         setGreens([]);
         setResult('');
-        setScore(''); // Reset score
+        setBlacksScore(0); // Reset Blacks score
+        setGreensScore(0); // Reset Greens score
         setMotm('');
         setBlackPlayers([]);
         setGreenPlayers([]);
@@ -431,6 +434,9 @@
       const firstPoints = sortedPoints[0] || 0;
       const secondPoints = sortedPoints[1] || 0;
       const thirdPoints = sortedPoints[2] || 0;
+
+      // Generate options for score dropdowns (0 to 30)
+      const scoreOptions = Array.from({ length: 31 }, (_, i) => i);
 
       return (
         <div className="container mx-auto p-4 max-w-7xl">
@@ -542,8 +548,9 @@
                       value={result}
                       onChange={(e) => {
                         setResult(e.target.value);
-                        setScore(''); // Reset score when result changes
-                        setMotm(''); // Reset MOTM when result changes
+                        setBlacksScore(0); // Reset Blacks score
+                        setGreensScore(0); // Reset Greens score
+                        setMotm(''); // Reset MOTM
                       }}
                       className="w-full p-2 border rounded"
                     >
@@ -555,14 +562,28 @@
                   </div>
                   {result && (
                     <div className="mb-4">
-                      <label className="block mb-1">Score (e.g., 3-2)</label>
-                      <input
-                        type="text"
-                        value={score}
-                        onChange={(e) => setScore(e.target.value)}
-                        placeholder="Enter score (e.g., 3-2)"
-                        className="w-full p-2 border rounded"
-                      />
+                      <label className="block mb-1">Score (Blacks - Greens)</label>
+                      <div className="flex items-center gap-2">
+                        <select
+                          value={blacksScore}
+                          onChange={(e) => setBlacksScore(Number(e.target.value))}
+                          className="w-20 p-2 border rounded"
+                        >
+                          {scoreOptions.map(num => (
+                            <option key={num} value={num}>{num}</option>
+                          ))}
+                        </select>
+                        <span>-</span>
+                        <select
+                          value={greensScore}
+                          onChange={(e) => setGreensScore(Number(e.target.value))}
+                          className="w-20 p-2 border rounded"
+                        >
+                          {scoreOptions.map(num => (
+                            <option key={num} value={num}>{num}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   )}
                   {result && (
@@ -716,7 +737,8 @@
                     setBlacks([]);
                     setGreens([]);
                     setResult('');
-                    setScore(''); // Reset score
+                    setBlacksScore(0); // Reset Blacks score
+                    setGreensScore(0); // Reset Greens score
                     setMotm('');
                     setBlackPlayers([]);
                     setGreenPlayers([]);
