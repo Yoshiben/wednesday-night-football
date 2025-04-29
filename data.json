@@ -2,54 +2,54 @@
   "players": [
     {
       "name": "Bailey Fulton",
-      "points": 3,
-      "games": 2,
-      "wins": 1,
+      "points": 5,
+      "games": 3,
+      "wins": 2,
       "draws": 1,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Ben Attle",
-      "points": 5,
-      "games": 3,
-      "wins": 2,
+      "points": 7,
+      "games": 4,
+      "wins": 3,
       "draws": 1,
       "losses": 0,
-      "motmAwards": 2
+      "motmAwards": 3
     },
     {
       "name": "Bradley Travis",
-      "points": 5,
-      "games": 3,
-      "wins": 2,
+      "points": 7,
+      "games": 4,
+      "wins": 3,
       "draws": 1,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Chad Ogden",
-      "points": 5,
-      "games": 3,
-      "wins": 2,
+      "points": 7,
+      "games": 4,
+      "wins": 3,
       "draws": 1,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Craig Ingham",
-      "points": 5,
-      "games": 3,
-      "wins": 2,
+      "points": 7,
+      "games": 4,
+      "wins": 3,
       "draws": 1,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Danny Minshull",
-      "points": 5,
-      "games": 3,
-      "wins": 2,
+      "points": 7,
+      "games": 4,
+      "wins": 3,
       "draws": 1,
       "losses": 0,
       "motmAwards": 1
@@ -57,55 +57,55 @@
     {
       "name": "Dom Johnson",
       "points": 1,
-      "games": 2,
+      "games": 3,
       "wins": 0,
       "draws": 1,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "Jake Halstead",
       "points": 1,
-      "games": 2,
+      "games": 3,
       "wins": 0,
       "draws": 1,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "James Shooter",
       "points": 3,
-      "games": 3,
+      "games": 4,
       "wins": 1,
       "draws": 1,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "Joe Duffy",
       "points": 1,
-      "games": 2,
+      "games": 3,
       "wins": 0,
       "draws": 1,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "Joe Kinnear",
       "points": 1,
-      "games": 2,
+      "games": 3,
       "wins": 0,
       "draws": 1,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 0
     },
     {
       "name": "Joe Rawlins",
       "points": 3,
-      "games": 3,
+      "games": 4,
       "wins": 1,
       "draws": 1,
-      "losses": 1,
+      "losses": 2,
       "motmAwards": 0
     },
     {
@@ -295,6 +295,28 @@
       "result": "draw",
       "score": "0-0",
       "motm": "Danny Minshull",
+      "date": "29/04/2025"
+    },
+    {
+      "blacks": [
+        "Bailey Fulton",
+        "Ben Attle",
+        "Bradley Travis",
+        "Chad Ogden",
+        "Craig Ingham",
+        "Danny Minshull"
+      ],
+      "greens": [
+        "Dom Johnson",
+        "Jake Halstead",
+        "James Shooter",
+        "Joe Duffy",
+        "Joe Kinnear",
+        "Joe Rawlins"
+      ],
+      "result": "blacks",
+      "score": "1-0",
+      "motm": "Ben Attle",
       "date": "29/04/2025"
     }
   ]
