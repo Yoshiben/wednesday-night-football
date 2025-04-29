@@ -29,13 +29,13 @@
       return hash.toString();
     };
 
-    // Hardcoded hashed password (updated, though not used in this file)
+    // Hardcoded hashed password (not used in this file)
     const HASHED_PASSWORD = '48690';
 
     const App = () => {
       const [matches, setMatches] = useState([]);
 
-      // Fetch data from GitHub on mount
+      // Fetch data from GitHub on mount and merge with localStorage
       useEffect(() => {
         const fetchData = async () => {
           try {
@@ -45,21 +45,43 @@
             if (response.ok) {
               const data = await response.json();
               console.log('Fetched data from GitHub:', data);
-              if (data.matches) {
-                setMatches(data.matches);
-              }
+              
+              // Load matches from data.json
+              let fetchedMatches = data.matches || [];
+              
+              // Load matches from localStorage
+              const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
+              console.log('Loaded matches from localStorage:', localMatches);
+              
+              // Merge matches (avoid duplicates based on date and teams)
+              const matchSignature = (match) => `${match.date}-${match.blacks.join(',')}-${match.greens.join(',')}`;
+              const matchMap = new Map();
+              
+              // Add fetched matches
+              fetchedMatches.forEach(match => {
+                matchMap.set(matchSignature(match), match);
+              });
+              
+              // Add local matches (only if not already in fetched matches)
+              localMatches.forEach(match => {
+                if (!matchMap.has(matchSignature(match))) {
+                  matchMap.set(matchSignature(match), match);
+                }
+              });
+              
+              const mergedMatches = Array.from(matchMap.values());
+              setMatches(mergedMatches);
+              localStorage.setItem('matches', JSON.stringify(mergedMatches));
+              console.log('Merged matches:', mergedMatches);
             } else {
               console.log('No data.json found, using localStorage');
+              const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
+              setMatches(localMatches);
             }
           } catch (error) {
             console.error('Error fetching data:', error);
-          }
-
-          // Fallback to localStorage
-          const savedMatches = localStorage.getItem('matches');
-          if (savedMatches) {
-            setMatches(JSON.parse(savedMatches));
-            console.log('Loaded matches from localStorage:', JSON.parse(savedMatches));
+            const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
+            setMatches(localMatches);
           }
         };
         fetchData();
