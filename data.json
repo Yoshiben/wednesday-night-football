@@ -2,476 +2,211 @@
   "players": [
     {
       "name": "Bailey Fulton",
-      "points": 13,
-      "games": 11,
-      "wins": 5,
-      "draws": 3,
-      "losses": 3,
-      "motmAwards": 1
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
+      "motmAwards": 0
     },
     {
       "name": "Ben Attle",
-      "points": 12,
-      "games": 10,
-      "wins": 5,
-      "draws": 2,
-      "losses": 3,
-      "motmAwards": 3
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
+      "motmAwards": 0
     },
     {
       "name": "Bradley Travis",
-      "points": 12,
-      "games": 10,
-      "wins": 5,
-      "draws": 2,
-      "losses": 3,
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Chad Ogden",
-      "points": 13,
-      "games": 11,
-      "wins": 5,
-      "draws": 3,
-      "losses": 3,
-      "motmAwards": 2
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
+      "motmAwards": 0
     },
     {
       "name": "Craig Ingham",
-      "points": 13,
-      "games": 12,
-      "wins": 5,
-      "draws": 3,
-      "losses": 4,
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Danny Minshull",
-      "points": 11,
-      "games": 9,
-      "wins": 5,
-      "draws": 1,
-      "losses": 3,
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Dom Johnson",
-      "points": 10,
-      "games": 9,
-      "wins": 4,
-      "draws": 2,
-      "losses": 3,
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Jake Halstead",
-      "points": 1,
-      "games": 3,
+      "points": 0,
+      "games": 0,
       "wins": 0,
-      "draws": 1,
-      "losses": 2,
+      "draws": 0,
+      "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "James Shooter",
-      "points": 10,
-      "games": 9,
-      "wins": 4,
-      "draws": 2,
-      "losses": 3,
-      "motmAwards": 1
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
+      "motmAwards": 0
     },
     {
       "name": "Joe Duffy",
-      "points": 9,
-      "games": 7,
-      "wins": 4,
-      "draws": 1,
-      "losses": 2,
-      "motmAwards": 1
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
+      "motmAwards": 0
     },
     {
       "name": "Joe Kinnear",
-      "points": 9,
-      "games": 6,
-      "wins": 4,
-      "draws": 1,
-      "losses": 1,
-      "motmAwards": 1
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
+      "motmAwards": 0
     },
     {
       "name": "Joe Rawlins",
-      "points": 10,
-      "games": 6,
-      "wins": 4,
-      "draws": 2,
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
       "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "John Sheard (Shed)",
-      "points": 3,
-      "games": 4,
-      "wins": 1,
-      "draws": 1,
-      "losses": 2,
-      "motmAwards": 1
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
+      "motmAwards": 0
     },
     {
       "name": "Jorge Westin-Pearson",
-      "points": 7,
-      "games": 7,
-      "wins": 3,
-      "draws": 1,
-      "losses": 3,
+      "points": 0,
+      "games": 0,
+      "wins": 0,
+      "draws": 0,
+      "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Kyle Carrington",
-      "points": 2,
-      "games": 5,
+      "points": 0,
+      "games": 0,
       "wins": 0,
-      "draws": 2,
-      "losses": 3,
-      "motmAwards": 1
+      "draws": 0,
+      "losses": 0,
+      "motmAwards": 0
     },
     {
       "name": "Leon Khan",
-      "points": 2,
-      "games": 4,
+      "points": 0,
+      "games": 0,
       "wins": 0,
-      "draws": 2,
-      "losses": 2,
-      "motmAwards": 1
+      "draws": 0,
+      "losses": 0,
+      "motmAwards": 0
     },
     {
       "name": "Niall Raymond",
-      "points": 2,
-      "games": 3,
+      "points": 0,
+      "games": 0,
       "wins": 0,
-      "draws": 2,
-      "losses": 1,
+      "draws": 0,
+      "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Ross Barney",
-      "points": 1,
-      "games": 2,
+      "points": 0,
+      "games": 0,
       "wins": 0,
-      "draws": 1,
-      "losses": 1,
+      "draws": 0,
+      "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Sohrob Rostampour",
-      "points": 1,
-      "games": 3,
-      "wins": 0,
-      "draws": 1,
-      "losses": 2,
-      "motmAwards": 0
-    },
-    {
-      "name": "Test Name",
       "points": 0,
-      "games": 1,
+      "games": 0,
       "wins": 0,
       "draws": 0,
-      "losses": 1,
+      "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Tom Kelton",
-      "points": 1,
-      "games": 3,
+      "points": 0,
+      "games": 0,
       "wins": 0,
-      "draws": 1,
-      "losses": 2,
+      "draws": 0,
+      "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Tom Wright",
-      "points": 1,
-      "games": 4,
+      "points": 0,
+      "games": 0,
       "wins": 0,
-      "draws": 1,
-      "losses": 3,
+      "draws": 0,
+      "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Zach Murphy",
-      "points": 1,
-      "games": 4,
+      "points": 0,
+      "games": 0,
       "wins": 0,
-      "draws": 1,
-      "losses": 3,
+      "draws": 0,
+      "losses": 0,
       "motmAwards": 0
     },
     {
       "name": "Zak Waddington",
       "points": 0,
-      "games": 1,
+      "games": 0,
       "wins": 0,
       "draws": 0,
-      "losses": 1,
+      "losses": 0,
       "motmAwards": 0
     }
   ],
-  "matches": [
-    {
-      "blacks": [
-        "Bailey Fulton",
-        "Ben Attle",
-        "Bradley Travis",
-        "Chad Ogden",
-        "Craig Ingham",
-        "Joe Duffy"
-      ],
-      "greens": [
-        "Danny Minshull",
-        "Dom Johnson",
-        "James Shooter",
-        "Joe Kinnear",
-        "Jorge Westin-Pearson",
-        "Kyle Carrington"
-      ],
-      "result": "blacks",
-      "motm": "Joe Kinnear",
-      "date": "4/21/2025"
-    },
-    {
-      "blacks": [
-        "Sohrob Rostampour",
-        "Tom Kelton",
-        "Tom Wright",
-        "Zach Murphy",
-        "Kyle Carrington",
-        "Leon Khan"
-      ],
-      "greens": [
-        "Bradley Travis",
-        "Chad Ogden",
-        "Craig Ingham",
-        "Bailey Fulton",
-        "Ben Attle",
-        "Danny Minshull"
-      ],
-      "result": "greens",
-      "motm": "Kyle Carrington",
-      "date": "4/21/2025"
-    },
-    {
-      "blacks": [
-        "Danny Minshull",
-        "Dom Johnson",
-        "James Shooter",
-        "Joe Kinnear",
-        "Joe Rawlins",
-        "Jorge Westin-Pearson"
-      ],
-      "greens": [
-        "Bailey Fulton",
-        "Ben Attle",
-        "Bradley Travis",
-        "Chad Ogden",
-        "Craig Ingham",
-        "Joe Duffy"
-      ],
-      "result": "blacks",
-      "motm": "James Shooter",
-      "date": "4/25/2025"
-    },
-    {
-      "blacks": [
-        "Bailey Fulton",
-        "Ben Attle",
-        "Bradley Travis",
-        "Chad Ogden",
-        "Craig Ingham",
-        "James Shooter"
-      ],
-      "greens": [
-        "John Sheard (Shed)",
-        "Dom Johnson",
-        "Joe Duffy",
-        "Joe Kinnear",
-        "Joe Rawlins",
-        "Jorge Westin-Pearson"
-      ],
-      "result": "greens",
-      "motm": "John Sheard (Shed)",
-      "date": "4/25/2025"
-    },
-    {
-      "blacks": [
-        "Bailey Fulton",
-        "Ben Attle",
-        "Bradley Travis",
-        "Chad Ogden",
-        "Craig Ingham",
-        "James Shooter"
-      ],
-      "greens": [
-        "Leon Khan",
-        "Joe Rawlins",
-        "John Sheard (Shed)",
-        "Jorge Westin-Pearson",
-        "Kyle Carrington",
-        "Niall Raymond"
-      ],
-      "result": "draw",
-      "motm": "Leon Khan",
-      "date": "4/25/2025"
-    },
-    {
-      "blacks": [
-        "Bailey Fulton",
-        "Ben Attle",
-        "Bradley Travis",
-        "Chad Ogden",
-        "Craig Ingham",
-        "Danny Minshull"
-      ],
-      "greens": [
-        "Dom Johnson",
-        "James Shooter",
-        "Joe Duffy",
-        "Joe Kinnear",
-        "Joe Rawlins",
-        "Jorge Westin-Pearson"
-      ],
-      "result": "greens",
-      "motm": "Chad Ogden",
-      "date": "4/25/2025"
-    },
-    {
-      "blacks": [
-        "Craig Ingham",
-        "Danny Minshull",
-        "Dom Johnson",
-        "James Shooter",
-        "Joe Duffy",
-        "Joe Kinnear"
-      ],
-      "greens": [
-        "John Sheard (Shed)",
-        "Jorge Westin-Pearson",
-        "Kyle Carrington",
-        "Leon Khan",
-        "Niall Raymond",
-        "Ross Barney"
-      ],
-      "result": "blacks",
-      "motm": "Joe Duffy",
-      "date": "28/04/2025"
-    },
-    {
-      "blacks": [
-        "Jake Halstead",
-        "Craig Ingham",
-        "Danny Minshull",
-        "Dom Johnson",
-        "Tom Wright",
-        "Zach Murphy"
-      ],
-      "greens": [
-        "Bailey Fulton",
-        "Ben Attle",
-        "Bradley Travis",
-        "Chad Ogden",
-        "James Shooter",
-        "Joe Rawlins"
-      ],
-      "result": "greens",
-      "motm": "Ben Attle",
-      "date": "4/28/2025"
-    },
-    {
-      "blacks": [
-        "Bailey Fulton",
-        "Ben Attle",
-        "Bradley Travis",
-        "Chad Ogden",
-        "Craig Ingham",
-        "Danny Minshull"
-      ],
-      "greens": [
-        "Dom Johnson",
-        "Jake Halstead",
-        "James Shooter",
-        "Joe Duffy",
-        "John Sheard (Shed)",
-        "Jorge Westin-Pearson"
-      ],
-      "result": "blacks",
-      "motm": "Ben Attle",
-      "date": "4/29/2025"
-    },
-    {
-      "blacks": [
-        "Bailey Fulton",
-        "Ben Attle",
-        "Bradley Travis",
-        "Chad Ogden",
-        "Craig Ingham",
-        "Danny Minshull"
-      ],
-      "greens": [
-        "Dom Johnson",
-        "Jake Halstead",
-        "James Shooter",
-        "Joe Duffy",
-        "Joe Kinnear",
-        "Joe Rawlins"
-      ],
-      "result": "draw",
-      "score": "18-6",
-      "motm": "Bailey Fulton",
-      "date": "29/04/2025"
-    },
-    {
-      "blacks": [
-        "Bailey Fulton",
-        "Ben Attle",
-        "Bradley Travis",
-        "Chad Ogden",
-        "Craig Ingham",
-        "Danny Minshull"
-      ],
-      "greens": [
-        "Sohrob Rostampour",
-        "Test Name",
-        "Tom Kelton",
-        "Tom Wright",
-        "Zach Murphy",
-        "Zak Waddington"
-      ],
-      "result": "blacks",
-      "score": "16-8",
-      "motm": "Ben Attle",
-      "date": "29/04/2025"
-    },
-    {
-      "blacks": [
-        "Tom Wright",
-        "Zach Murphy",
-        "Ross Barney",
-        "Sohrob Rostampour",
-        "Niall Raymond",
-        "Kyle Carrington"
-      ],
-      "greens": [
-        "Chad Ogden",
-        "Bailey Fulton",
-        "Dom Johnson",
-        "Craig Ingham",
-        "Leon Khan",
-        "Tom Kelton"
-      ],
-      "result": "draw",
-      "score": "4-3",
-      "motm": "Chad Ogden",
-      "date": "29/04/2025"
-    }
-  ]
+  "matches": []
 }
