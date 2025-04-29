@@ -70,6 +70,7 @@
       const [password, setPassword] = useState('');
       const [error, setError] = useState('');
       const [isPasswordValid, setIsPasswordValid] = useState(false);
+      const [isLoggingMatch, setIsLoggingMatch] = useState(false);
 
       // Validate password on change
       useEffect(() => {
@@ -87,7 +88,7 @@
         }
       }, [password]);
 
-      // Fetch data from GitHub on mount
+      // Fetch data from GitHub on mount and merge with localStorage
       useEffect(() => {
         const fetchData = async () => {
           try {
@@ -126,15 +127,33 @@
               setPlayers(updatedPlayers);
               console.log('Set players from GitHub:', updatedPlayers);
               
-              if (data.matches) {
-                setMatches(data.matches);
-                localStorage.setItem('matches', JSON.stringify(data.matches));
-                console.log('Set matches from GitHub:', data.matches);
-              } else {
-                console.log('No matches in data.json');
-                setMatches([]);
-                localStorage.setItem('matches', JSON.stringify([]));
-              }
+              // Load matches from data.json
+              let fetchedMatches = data.matches || [];
+              
+              // Load matches from localStorage
+              const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
+              console.log('Loaded matches from localStorage:', localMatches);
+              
+              // Merge matches (avoid duplicates based on date and teams)
+              const matchSignature = (match) => `${match.date}-${match.blacks.join(',')}-${match.greens.join(',')}`;
+              const matchMap = new Map();
+              
+              // Add fetched matches
+              fetchedMatches.forEach(match => {
+                matchMap.set(matchSignature(match), match);
+              });
+              
+              // Add local matches (only if not already in fetched matches)
+              localMatches.forEach(match => {
+                if (!matchMap.has(matchSignature(match))) {
+                  matchMap.set(matchSignature(match), match);
+                }
+              });
+              
+              const mergedMatches = Array.from(matchMap.values());
+              setMatches(mergedMatches);
+              localStorage.setItem('matches', JSON.stringify(mergedMatches));
+              console.log('Merged matches:', mergedMatches);
             } else {
               console.error('Failed to fetch data.json:', response.status);
               setError('Failed to fetch data. Using default players.');
@@ -148,6 +167,10 @@
                 motmAwards: 0
               })).sort((a, b) => a.name.localeCompare(b.name));
               setPlayers(defaultPlayerData);
+              
+              // Fallback to localStorage matches
+              const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
+              setMatches(localMatches);
             }
           } catch (error) {
             console.error('Error fetching data.json:', error);
@@ -162,6 +185,10 @@
               motmAwards: 0
             })).sort((a, b) => a.name.localeCompare(b.name));
             setPlayers(defaultPlayerData);
+            
+            // Fallback to localStorage matches
+            const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
+            setMatches(localMatches);
           }
         };
         fetchData();
@@ -197,6 +224,8 @@
             console.log('Synced players to data.json');
             setError('Players synced successfully!');
             setTimeout(() => setError(''), 3000);
+            // Clear localStorage matches after successful sync
+            localStorage.setItem('matches', JSON.stringify(matches));
           } else {
             console.error('Failed to sync players:', await response.json());
             setError('Failed to sync players. Check password or API.');
@@ -281,6 +310,9 @@
           return;
         }
 
+        setIsLoggingMatch(true);
+        setError('');
+
         const updatedPlayers = players.map(player => ({
           ...player,
           points: player.points,
@@ -345,17 +377,9 @@
         const newMatch = { blacks, greens, result, score, motm, date: new Date().toLocaleDateString() };
         const updatedMatches = [...matches, newMatch];
 
-        setPlayers(updatedPlayers);
+        // Update state and localStorage immediately
         setMatches(updatedMatches);
-        setBlacks([]);
-        setGreens([]);
-        setResult('');
-        setBlacksScore(0);
-        setGreensScore(0);
-        setMotm('');
-        setBlackPlayers([]);
-        setGreenPlayers([]);
-        setError('');
+        localStorage.setItem('matches', JSON.stringify(updatedMatches));
 
         // Call Vercel API
         try {
@@ -378,6 +402,8 @@
             console.log('Triggered workflow via Vercel API');
             setError('Match logged successfully!');
             setTimeout(() => setError(''), 3000);
+            // Clear localStorage matches after successful sync
+            localStorage.setItem('matches', JSON.stringify(updatedMatches));
           } else {
             console.error('Failed to trigger workflow:', data);
             setError(`Failed to update data: ${data.error}`);
@@ -385,6 +411,17 @@
         } catch (error) {
           console.error('Error calling Vercel API:', error);
           setError('Error updating data. Try again later.');
+        } finally {
+          setPlayers(updatedPlayers);
+          setBlacks([]);
+          setGreens([]);
+          setResult('');
+          setBlacksScore(0);
+          setGreensScore(0);
+          setMotm('');
+          setBlackPlayers([]);
+          setGreenPlayers([]);
+          setIsLoggingMatch(false);
         }
       };
 
@@ -625,10 +662,10 @@
                   <div className="flex gap-2">
                     <button
                       type="submit"
-                      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                      disabled={!isPasswordValid}
+                      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-gray-400"
+                      disabled={!isPasswordValid || isLoggingMatch}
                     >
-                      Log Match
+                      {isLoggingMatch ? 'Logging...' : 'Log Match'}
                     </button>
                     <a
                       href="./history.html"
@@ -783,6 +820,7 @@
                         console.log('Triggered workflow via Vercel API for reset');
                         setError('Data reset successfully!');
                         setTimeout(() => setError(''), 3000);
+                        localStorage.setItem('matches', JSON.stringify([]));
                       } else {
                         console.error('Failed to trigger workflow:', data);
                         setError(`Failed to reset data: ${data.error}`);
