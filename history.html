@@ -34,58 +34,58 @@
 
     const App = () => {
       const [matches, setMatches] = useState([]);
+      const [lastSyncTime, setLastSyncTime] = useState(0);
 
-      // Fetch data from GitHub on mount and merge with localStorage
+      // Load initial data (prioritize localStorage, then sync with data.json)
       useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await fetch('data.json?t=' + new Date().getTime(), {
-              cache: 'no-store'
-            });
-            if (response.ok) {
-              const data = await response.json();
-              console.log('Fetched data from GitHub:', data);
-              
-              // Load matches from data.json
-              let fetchedMatches = data.matches || [];
-              
-              // Load matches from localStorage
-              const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
-              console.log('Loaded matches from localStorage:', localMatches);
-              
-              // Merge matches (avoid duplicates based on date and teams)
-              const matchSignature = (match) => `${match.date}-${match.blacks.join(',')}-${match.greens.join(',')}`;
-              const matchMap = new Map();
-              
-              // Add fetched matches
-              fetchedMatches.forEach(match => {
-                matchMap.set(matchSignature(match), match);
-              });
-              
-              // Add local matches (only if not already in fetched matches)
-              localMatches.forEach(match => {
-                if (!matchMap.has(matchSignature(match))) {
-                  matchMap.set(matchSignature(match), match);
-                }
-              });
-              
-              const mergedMatches = Array.from(matchMap.values());
-              setMatches(mergedMatches);
-              localStorage.setItem('matches', JSON.stringify(mergedMatches));
-              console.log('Merged matches:', mergedMatches);
-            } else {
-              console.log('No data.json found, using localStorage');
-              const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
-              setMatches(localMatches);
-            }
-          } catch (error) {
-            console.error('Error fetching data:', error);
-            const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
-            setMatches(localMatches);
-          }
+        const loadData = async () => {
+          // Load matches from localStorage first
+          const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
+          setMatches(localMatches);
+          console.log('Loaded matches from localStorage:', localMatches);
+
+          // Sync with data.json
+          await syncWithServer();
         };
-        fetchData();
+        loadData();
       }, []);
+
+      // Periodically sync with server (every 30 seconds if no recent sync)
+      useEffect(() => {
+        const interval = setInterval(() => {
+          if (Date.now() - lastSyncTime > 30000) {
+            syncWithServer();
+          }
+        }, 10000);
+        return () => clearInterval(interval);
+      }, [lastSyncTime]);
+
+      // Sync with server (fetch data.json and merge with local data)
+      const syncWithServer = async () => {
+        try {
+          const response = await fetch('data.json?t=' + new Date().getTime(), {
+            cache: 'no-store'
+          });
+          if (response.ok) {
+            const data = await response.json();
+            console.log('Fetched data from GitHub:', data);
+
+            // Update matches (only if data.json has more matches)
+            const serverMatches = data.matches || [];
+            const localMatches = JSON.parse(localStorage.getItem('matches') || '[]');
+            if (serverMatches.length > localMatches.length) {
+              setMatches(serverMatches);
+              localStorage.setItem('matches', JSON.stringify(serverMatches));
+              console.log('Synced matches from GitHub:', serverMatches);
+            }
+            setLastSyncTime(Date.now());
+          } else {
+            console.log('No data.json found, using localStorage');
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
 
       // Log matches for debugging
       useEffect(() => {
