@@ -83,6 +83,7 @@
                     <th className="border p-2">Blacks</th>
                     <th className="border p-2">Greens</th>
                     <th className="border p-2">Result</th>
+                    <th className="border p-2">Score</th>
                     <th className="border p-2">MOTM</th>
                   </tr>
                 </thead>
@@ -96,6 +97,7 @@
                         {match.result === 'blacks' ? 'Blacks Win' :
                          match.result === 'greens' ? 'Greens Win' : 'Draw'}
                       </td>
+                      <td className="border p-2">{match.score || 'N/A'}</td>
                       <td className="border p-2">{match.motm || 'None'}</td>
                     </tr>
                   ))}
