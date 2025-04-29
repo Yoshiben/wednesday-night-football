@@ -117,10 +117,10 @@
         loadData();
       }, []);
 
-      // Periodically sync with server (every 30 seconds if no recent sync)
+      // Periodically sync with server (every 20 seconds if no recent sync)
       useEffect(() => {
         const interval = setInterval(() => {
-          if (Date.now() - lastSyncTime > 30000) {
+          if (Date.now() - lastSyncTime > 20000) {
             syncWithServer();
           }
         }, 10000);
@@ -211,8 +211,8 @@
           if (response.ok) {
             console.log('Synced players to data.json');
             setError('Players synced successfully! Waiting for server update...');
-            // Wait for GitHub Actions workflow to complete (e.g., 30 seconds)
-            await new Promise(resolve => setTimeout(resolve, 30000));
+            // Wait for GitHub Actions workflow to complete (reduced to 20 seconds)
+            await new Promise(resolve => setTimeout(resolve, 20000));
             await syncWithServer();
             setError('Sync completed!');
             setTimeout(() => setError(''), 3000);
@@ -262,6 +262,15 @@
       // Remove player from Greens
       const removeFromGreens = (player) => {
         setGreens(prev => prev.filter(p => p !== player));
+      };
+
+      // Group players into rows of 3
+      const groupPlayersIntoRows = (playersArray) => {
+        const rows = [];
+        for (let i = 0; i < playersArray.length; i += 3) {
+          rows.push(playersArray.slice(i, i + 3));
+        }
+        return rows;
       };
 
       // Log a match and trigger Vercel API
@@ -393,8 +402,8 @@
           if (response.ok) {
             console.log('Triggered workflow via Vercel API');
             setError('Match logged successfully! Waiting for server update...');
-            // Wait for GitHub Actions workflow to complete (e.g., 30 seconds)
-            await new Promise(resolve => setTimeout(resolve, 30000));
+            // Wait for GitHub Actions workflow to complete (reduced to 20 seconds)
+            await new Promise(resolve => setTimeout(resolve, 20000));
             await syncWithServer();
             setError('Match synced with server!');
             setTimeout(() => setError(''), 3000);
@@ -536,15 +545,19 @@
                 </form>
                 <div className="mt-2">
                   <p>Blacks: {blacks.length === 0 ? 'None' : ''}</p>
-                  {blacks.map(player => (
-                    <div key={player} className="flex items-center gap-2">
-                      <span>{player}</span>
-                      <button
-                        onClick={() => removeFromBlacks(player)}
-                        className="bg-red-500 text-white px-1 py-0.05 text-sm rounded hover:bg-red-500"
-                      >
-                        Remove
-                      </button>
+                  {groupPlayersIntoRows(blacks).map((row, rowIndex) => (
+                    <div key={rowIndex} className="flex gap-4 mb-2">
+                      {row.map((player, playerIndex) => (
+                        <div key={player} className="flex items-center gap-2">
+                          <span>{player}</span>
+                          <button
+                            onClick={() => removeFromBlacks(player)}
+                            className="bg-red-500 text-white px-1 py-0.05 text-sm rounded hover:bg-red-500"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   ))}
                 </div>
@@ -576,15 +589,19 @@
                 </form>
                 <div className="mt-2">
                   <p>Greens: {greens.length === 0 ? 'None' : ''}</p>
-                  {greens.map(player => (
-                    <div key={player} className="flex items-center gap-2">
-                      <span>{player}</span>
-                      <button
-                        onClick={() => removeFromGreens(player)}
-                        className="bg-red-500 text-white px-1 py-0.05 text-sm rounded hover:bg-red-500"
-                      >
-                        Remove
-                      </button>
+                  {groupPlayersIntoRows(greens).map((row, rowIndex) => (
+                    <div key={rowIndex} className="flex gap-4 mb-2">
+                      {row.map((player, playerIndex) => (
+                        <div key={player} className="flex items-center gap-2">
+                          <span>{player}</span>
+                          <button
+                            onClick={() => removeFromGreens(player)}
+                            className="bg-red-500 text-white px-1 py-0.05 text-sm rounded hover:bg-red-500"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   ))}
                 </div>
@@ -816,7 +833,7 @@
                       if (response.ok) {
                         console.log('Triggered workflow via Vercel API for reset');
                         setError('Data reset successfully! Waiting for server update...');
-                        await new Promise(resolve => setTimeout(resolve, 30000));
+                        await new Promise(resolve => setTimeout(resolve, 20000));
                         await syncWithServer();
                         setError('Reset completed!');
                         setTimeout(() => setError(''), 3000);
