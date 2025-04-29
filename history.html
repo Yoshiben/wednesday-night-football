@@ -18,6 +18,20 @@
 
     const { useState, useEffect } = React;
 
+    // Simple hash function for password (kept for consistency, though not used)
+    const hashPassword = (password) => {
+      let hash = 0;
+      for (let i = 0; i < password.length; i++) {
+        const char = password.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+      }
+      return hash.toString();
+    };
+
+    // Hardcoded hashed password (updated, though not used in this file)
+    const HASHED_PASSWORD = '48690';
+
     const App = () => {
       const [matches, setMatches] = useState([]);
 
