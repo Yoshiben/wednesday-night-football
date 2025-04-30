@@ -1,6 +1,7 @@
 const defaultPlayers = [
   "Bailey Fulton", 
   "Ben Attle", 
+  "Ben Franks",
   "Bradley Travis", 
   "Chad Ogden", 
   "Craig Ingham", 
@@ -13,13 +14,16 @@ const defaultPlayers = [
   "Joe Rawlins", 
   "John Sheard (Shed)", 
   "Jorge Westin-Pearson", 
+  "Josh Robinson",
   "Kyle Carrington", 
   "Leon Khan", 
+  "Luke Masters",
   "Niall Raymond", 
   "Ross Barney", 
   "Sohrob Rostampour", 
   "Tom Kelton", 
   "Tom Wright", 
+  "Will Allsop",
   "Zach Murphy",
   "Zak Waddington"
 ];
