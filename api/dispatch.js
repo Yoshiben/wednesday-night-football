@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
   }
 
   const { password, players, matches } = req.body;
-  const HASHED_PASSWORD = '48690';
+  const HASHED_PASSWORD = '1537491982';
   const PAT = process.env.DISPATCH_TOKEN;
 
   let hash = 0;
