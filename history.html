@@ -124,7 +124,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {matches.reverse().map((match, index) => (
+                  {matches.slice().reverse().map((match, index) => (
                     <tr key={index}>
                       <td className="border p-2">{match.date}</td>
                       <td className="border p-2">{match.blacks.join(', ')}</td>
