@@ -23,7 +23,7 @@ const defaultPlayers = [
   "Sohrob Rostampour", 
   "Tom Kelton", 
   "Tom Wright", 
-  "Will Allsop",
+  "Will Allsopp",
   "Zach Murphy",
   "Zak Waddington"
 ];
