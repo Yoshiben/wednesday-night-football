@@ -727,7 +727,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {matches.slice(-5).map((match, index) => (
+                      {matches.slice(-5).reverse().map((match, index) => (
                         <tr key={index}>
                           <td className="border p-2">{match.date}</td>
                           <td className="border p-2">
