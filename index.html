@@ -20,12 +20,6 @@
       background-color: #22c55e;
       color: #ffffff;
     }
-    /* Add this new style */
-  .tiny-remove-btn {
-    font-size: 0.4rem;
-    padding: 0.2rem 0.3rem;
-    line-height: 1;
-  }
   </style>
 </head>
 <body>
@@ -77,6 +71,7 @@
       const [error, setError] = useState('');
       const [isPasswordValid, setIsPasswordValid] = useState(false);
       const [isLoggingMatch, setIsLoggingMatch] = useState(false);
+      const [isSyncing, setIsSyncing] = useState(false);
       const [lastSyncTime, setLastSyncTime] = useState(0);
 
       // Validate password on change
@@ -134,7 +129,7 @@
       }, [lastSyncTime]);
 
       // Sync with server (fetch data.json and merge with local data)
-      const syncWithServer = async () => {
+      const syncWithServer = async (retryCount = 3) => {
         try {
           const response = await fetch('data.json?t=' + new Date().getTime(), {
             cache: 'no-store'
@@ -179,12 +174,17 @@
             }
             setLastSyncTime(Date.now());
           } else {
-            console.error('Failed to fetch data.json:', response.status);
-            setError('Failed to fetch server data. Using local data.');
+            throw new Error('Failed to fetch data.json: ' + response.status);
           }
         } catch (error) {
-          console.error('Error fetching data.json:', error);
-          setError('Error fetching server data. Using local data.');
+          if (retryCount > 0) {
+            console.log(`Retrying sync (${retryCount} attempts left)...`);
+            await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds
+            await syncWithServer(retryCount - 1);
+          } else {
+            console.error('Error fetching data.json:', error);
+            setError('Error fetching server data. Using local data.');
+          }
         }
       };
 
@@ -204,6 +204,8 @@
           setError('Incorrect password. Please enter the correct password.');
           return;
         }
+        setIsSyncing(true);
+        setError('');
         // Filter players to only include those with games > 0
         const filteredPlayers = players.filter(player => player.games > 0);
         try {
@@ -230,6 +232,8 @@
         } catch (error) {
           console.error('Error syncing players:', error);
           setError('Error syncing players. Try again later.');
+        } finally {
+          setIsSyncing(false);
         }
       };
 
@@ -561,7 +565,7 @@
                           <span>{player}</span>
                           <button
                             onClick={() => removeFromBlacks(player)}
-                            className="bg-red-500 text-white rounded hover:bg-red-600 tiny-remove-btn"
+                            className="bg-red-500 text-white text-xs px-0.5 py-px rounded hover:bg-red-600"
                           >
                             Remove
                           </button>
@@ -605,7 +609,7 @@
                           <span>{player}</span>
                           <button
                             onClick={() => removeFromGreens(player)}
-                            className="bg-red-500 text-white rounded hover:bg-red-600 tiny-remove-btn"
+                            className="bg-red-500 text-white text-xs px-0.5 py-px rounded hover:bg-red-600"
                           >
                             Remove
                           </button>
@@ -685,7 +689,17 @@
                       className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-gray-400"
                       disabled={!isPasswordValid || isLoggingMatch}
                     >
-                      {isLoggingMatch ? 'Logging...' : 'Log Match'}
+                      {isLoggingMatch ? (
+                        <span className="flex items-center">
+                          <svg className="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Logging...
+                        </span>
+                      ) : (
+                        'Log Match'
+                      )}
                     </button>
                     <a
                       href="./history.html"
@@ -713,7 +727,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {matches.slice(-5).reverse().map((match, index) => (
+                      {matches.slice(-5).map((match, index) => (
                         <tr key={index}>
                           <td className="border p-2">{match.date}</td>
                           <td className="border p-2">
@@ -800,7 +814,11 @@
                       setError('Incorrect password. Please enter the correct password.');
                       return;
                     }
-
+                    if (!window.confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+                      return;
+                    }
+                    setIsSyncing(true);
+                    setError('');
                     const resetPlayers = defaultPlayers.map(name => ({
                       name,
                       points: 0,
@@ -853,19 +871,41 @@
                     } catch (error) {
                       console.error('Error calling Vercel API:', error);
                       setError('Error resetting data. Try again later.');
+                    } finally {
+                      setIsSyncing(false);
                     }
                   }}
                   className="bg-red-500 text-white px-1 py-0.5 text-xs rounded hover:bg-red-600"
-                  disabled={!isPasswordValid}
+                  disabled={!isPasswordValid || isSyncing}
                 >
-                  Reset
+                  {isSyncing ? (
+                    <span className="flex items-center">
+                      <svg className="animate-spin h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Resetting...
+                    </span>
+                  ) : (
+                    'Reset'
+                  )}
                 </button>
                 <button
                   onClick={syncPlayers}
                   className="bg-blue-500 text-white px-1 py-0.5 text-xs rounded hover:bg-blue-600"
-                  disabled={!isPasswordValid}
+                  disabled={!isPasswordValid || isSyncing}
                 >
-                  Sync Players
+                  {isSyncing ? (
+                    <span className="flex items-center">
+                      <svg className="animate-spin h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Syncing...
+                    </span>
+                  ) : (
+                    'Sync Players'
+                  )}
                 </button>
               </div>
             </div>
