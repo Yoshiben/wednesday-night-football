@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Verify Password Hash
         run: |
-          if [ "${{ github.event.client_payload.passwordHash }}" != "515936937" ]; then
+          if [ "${{ github.event.client_payload.passwordHash }}" != "1537491982" ]; then
             echo "Invalid password hash"
             exit 1
           fi
