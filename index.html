@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=0.5">
   <title>Wednesday Night Football ⚽</title>
   <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
@@ -28,6 +28,17 @@
       }
       .table-container table {
         width: 100%;
+      }
+      /* Reduce table cell size on mobile to fit viewport */
+      .leaderboard-table th,
+      .leaderboard-table td {
+        font-size: 0.75rem; /* Smaller font size on mobile */
+        padding: 0.25rem; /* Tighter padding */
+      }
+      .recent-matches-table th,
+      .recent-matches-table td {
+        font-size: 0.75rem;
+        padding: 0.25rem;
       }
     }
     /* Ensure tables take full width on desktop */
@@ -260,7 +271,7 @@
                 }
               });
 
-              updatedPlayers.sort((aWHM, b) => a.name.localeCompare(b.name));
+              updatedPlayers.sort((a, b) => a.name.localeCompare(b.name));
             }
 
             setPlayers(updatedPlayers);
@@ -799,12 +810,6 @@
                           'Log Match'
                         )}
                       </button>
-                      <a
-                        href="./history.html"
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                      >
-                        View Match History
-                      </a>
                     </div>
                   </form>
                 </div>
@@ -816,7 +821,7 @@
                     <p>No matches logged yet.</p>
                   ) : (
                     <div className="table-container">
-                      <table className="border-collapse">
+                      <table className="border-collapse recent-matches-table">
                         <thead>
                           <tr className="bg-gray-200">
                             <th className="border p-2">Date</th>
@@ -847,21 +852,27 @@
 
             {/* Right Column on Desktop (Always Visible), Full Width on Mobile */}
             <div>
-              {/* Update Scores Button (Moved above Leaderboard) */}
-              <div className="mb-4">
+              {/* Update Scores and View Match History Buttons */}
+              <div className="mb-4 flex gap-2">
                 <button
                   onClick={() => setIsUpdatingScores(!isUpdatingScores)}
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                 >
                   {isUpdatingScores ? 'Hide Update Scores' : 'Update Scores'}
                 </button>
+                <a
+                  href="./history.html"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  View Match History
+                </a>
               </div>
 
               {/* Leaderboard (Always Visible) */}
               <div>
                 <h2 className="text-xl font-semibold mb-2">Leaderboard</h2>
                 <div className="table-container">
-                  <table className="border-collapse">
+                  <table className="border-collapse leaderboard-table">
                     <thead>
                       <tr className="bg-gray-200">
                         <th className="border p-2">Player</th>
