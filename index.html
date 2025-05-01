@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Wednesday Night Football ⚽</title>
   <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
@@ -20,15 +20,23 @@
       background-color: #22c55e;
       color: #ffffff;
     }
-    /* Ensure both tables have the same width on mobile */
+    /* Ensure tables are scrollable on mobile */
     @media (max-width: 767px) {
       .table-container {
         width: 100%;
-        overflow-x: auto; /* Allow horizontal scrolling if needed */
+        overflow-x: auto;
       }
       .table-container table {
         width: 100%;
-        min-width: 600px; /* Match the natural width of the leaderboard table on mobile */
+      }
+    }
+    /* Ensure tables take full width on desktop */
+    @media (min-width: 768px) {
+      .table-container {
+        width: 100%;
+      }
+      .table-container table {
+        width: 100%;
       }
     }
   </style>
@@ -252,7 +260,7 @@
                 }
               });
 
-              updatedPlayers.sort((a, b) => a.name.localeCompare(b.name));
+              updatedPlayers.sort((aWHM, b) => a.name.localeCompare(b.name));
             }
 
             setPlayers(updatedPlayers);
@@ -602,10 +610,244 @@
       return (
         <div className="container mx-auto p-4 max-w-7xl">
           <h1 className="text-3xl font-bold mb-6 text-center">Wednesday Night Football ⚽</h1>
-          <div className="md:grid md:grid-cols-2 md:gap-8">
-            {/* Left Column: Update Scores Button, Password, Teams, Log Match, Recent Matches */}
+          
+          {/* Main Layout */}
+          <div className={isUpdatingScores ? "md:grid md:grid-cols-2 md:gap-8" : ""}>
+            {/* Left Column: Update Sections (Hidden by default on desktop, always stacked on mobile) */}
+            {isUpdatingScores && (
+              <div>
+                {/* Password Input */}
+                <div className="mb-8">
+                  <label className="block mb-1">Password (for logging matches and syncing)</label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter password"
+                    className="w-full p-2 border rounded"
+                  />
+                  {error && <p className="text-red-500 mt-2">{error}</p>}
+                  {isPasswordValid && <p className="text-green-500 mt-2">Password verified!</p>}
+                </div>
+
+                {/* Blacks Team */}
+                <div className="mb-8">
+                  <form onSubmit={addToBlacks} className="flex gap-2">
+                    <select
+                      multiple
+                      value={blackPlayers}
+                      onChange={(e) => setBlackPlayers([...e.target.selectedOptions].map(o => o.value))}
+                      className="blacks-select flex-1 p-2 border rounded h-32"
+                    >
+                      {players
+                        .filter(p => !blacks.includes(p.name) && !greens.includes(p.name))
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map(player => (
+                          <option key={player.name} value={player.name}>{player.name}</option>
+                        ))}
+                    </select>
+                    <button
+                      type="submit"
+                      className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
+                      disabled={blacks.length >= 6}
+                    >
+                      Add to Blacks
+                    </button>
+                  </form>
+                  <div className="mt-2">
+                    <p>Blacks: {blacks.length === 0 ? 'None' : ''}</p>
+                    {groupPlayersIntoRows(blacks).map((row, rowIndex) => (
+                      <div key={rowIndex} className="flex gap-4 mb-2">
+                        {row.map((player, playerIndex) => (
+                          <div key={player} className="flex items-center gap-2">
+                            <span>{player}</span>
+                            <button
+                              onClick={() => removeFromBlacks(player)}
+                              className="bg-red-500 text-white text-xs px-0.5 py-px rounded hover:bg-red-600"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Greens Team */}
+                <div className="mb-8">
+                  <form onSubmit={addToGreens} className="flex gap-2">
+                    <select
+                      multiple
+                      value={greenPlayers}
+                      onChange={(e) => setGreenPlayers([...e.target.selectedOptions].map(o => o.value))}
+                      className="greens-select flex-1 p-2 border rounded h-32"
+                    >
+                      {players
+                        .filter(p => !greens.includes(p.name) && !blacks.includes(p.name))
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map(player => (
+                          <option key={player.name} value={player.name}>{player.name}</option>
+                        ))}
+                    </select>
+                    <button
+                      type="submit"
+                      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                      disabled={greens.length >= 6}
+                    >
+                      Add to Greens
+                    </button>
+                  </form>
+                  <div className="mt-2">
+                    <p>Greens: {greens.length === 0 ? 'None' : ''}</p>
+                    {groupPlayersIntoRows(greens).map((row, rowIndex) => (
+                      <div key={rowIndex} className="flex gap-4 mb-2">
+                        {row.map((player, playerIndex) => (
+                          <div key={player} className="flex items-center gap-2">
+                            <span>{player}</span>
+                            <button
+                              onClick={() => removeFromGreens(player)}
+                              className="bg-red-500 text-white text-xs px-0.5 py-px rounded hover:bg-red-600"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Log Match */}
+                <div className="mb-8">
+                  <h2 className="text-xl font-semibold mb-2">Log Match</h2>
+                  <form onSubmit={logMatch}>
+                    <div className="mb-4">
+                      <label className="block mb-1">Result</label>
+                      <select
+                        value={result}
+                        onChange={(e) => {
+                          setResult(e.target.value);
+                          setBlacksScore(0);
+                          setGreensScore(0);
+                          setMotm('');
+                        }}
+                        className="w-full p-2 border rounded"
+                      >
+                        <option value="">Select result</option>
+                        <option value="blacks">Blacks Win</option>
+                        <option value="greens">Greens Win</option>
+                        <option value="draw">Draw</option>
+                      </select>
+                    </div>
+                    {result && (
+                      <div className="mb-4">
+                        <label className="block mb-1">Score (Blacks - Greens)</label>
+                        <div className="flex items-center gap-2">
+                          <select
+                            value={blacksScore}
+                            onChange={(e) => setBlacksScore(Number(e.target.value))}
+                            className="w-20 p-2 border rounded"
+                          >
+                            {scoreOptions.map(num => (
+                              <option key={num} value={num}>{num}</option>
+                            ))}
+                          </select>
+                          <span>-</span>
+                          <select
+                            value={greensScore}
+                            onChange={(e) => setGreensScore(Number(e.target.value))}
+                            className="w-20 p-2 border rounded"
+                          >
+                            {scoreOptions.map(num => (
+                              <option key={num} value={num}>{num}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    )}
+                    {result && (
+                      <div className="mb-4">
+                        <label className="block mb-1">Man of the Match</label>
+                        <select
+                          value={motm}
+                          onChange={(e) => setMotm(e.target.value)}
+                          className="w-full p-2 border rounded"
+                        >
+                          <option value="">None</option>
+                          {[...blacks, ...greens].sort().map(player => (
+                            <option key={player} value={player}>{player}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                    <div className="flex gap-2">
+                      <button
+                        type="submit"
+                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-gray-400"
+                        disabled={!isPasswordValid || isLoggingMatch}
+                      >
+                        {isLoggingMatch ? (
+                          <span className="flex items-center">
+                            <svg className="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                            Logging...
+                          </span>
+                        ) : (
+                          'Log Match'
+                        )}
+                      </button>
+                      <a
+                        href="./history.html"
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                      >
+                        View Match History
+                      </a>
+                    </div>
+                  </form>
+                </div>
+
+                {/* Recent Matches */}
+                <div className="mb-8">
+                  <h2 className="text-xl font-semibold mb-2">Recent Matches</h2>
+                  {matches.length === 0 ? (
+                    <p>No matches logged yet.</p>
+                  ) : (
+                    <div className="table-container">
+                      <table className="border-collapse">
+                        <thead>
+                          <tr className="bg-gray-200">
+                            <th className="border p-2">Date</th>
+                            <th className="border p-2">Result</th>
+                            <th className="border p-2">Score</th>
+                            <th className="border p-2">MOTM</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {matches.slice(-5).map((match, index) => (
+                            <tr key={index}>
+                              <td className="border p-2">{match.date}</td>
+                              <td className="border p-2">
+                                {match.result === 'blacks' ? 'Blacks Win' :
+                                 match.result === 'greens' ? 'Greens Win' : 'Draw'}
+                              </td>
+                              <td className="border p-2">{match.score || 'N/A'}</td>
+                              <td className="border p-2">{match.motm || 'None'}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Right Column on Desktop (Always Visible), Full Width on Mobile */}
             <div>
-              {/* Update Scores Button */}
+              {/* Update Scores Button (Moved above Leaderboard) */}
               <div className="mb-4">
                 <button
                   onClick={() => setIsUpdatingScores(!isUpdatingScores)}
@@ -615,242 +857,7 @@
                 </button>
               </div>
 
-              {/* Update Sections (Hidden by Default) */}
-              {isUpdatingScores && (
-                <>
-                  {/* Password Input */}
-                  <div className="mb-8">
-                    <label className="block mb-1">Password (for logging matches and syncing)</label>
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter password"
-                      className="w-full p-2 border rounded"
-                    />
-                    {error && <p className="text-red-500 mt-2">{error}</p>}
-                    {isPasswordValid && <p className="text-green-500 mt-2">Password verified!</p>}
-                  </div>
-
-                  {/* Blacks Team */}
-                  <div className="mb-8">
-                    <form onSubmit={addToBlacks} className="flex gap-2">
-                      <select
-                        multiple
-                        value={blackPlayers}
-                        onChange={(e) => setBlackPlayers([...e.target.selectedOptions].map(o => o.value))}
-                        className="blacks-select flex-1 p-2 border rounded h-32"
-                      >
-                        {players
-                          .filter(p => !blacks.includes(p.name) && !greens.includes(p.name))
-                          .sort((a, b) => a.name.localeCompare(b.name))
-                          .map(player => (
-                            <option key={player.name} value={player.name}>{player.name}</option>
-                          ))}
-                      </select>
-                      <button
-                        type="submit"
-                        className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
-                        disabled={blacks.length >= 6}
-                      >
-                        Add to Blacks
-                      </button>
-                    </form>
-                    <div className="mt-2">
-                      <p>Blacks: {blacks.length === 0 ? 'None' : ''}</p>
-                      {groupPlayersIntoRows(blacks).map((row, rowIndex) => (
-                        <div key={rowIndex} className="flex gap-4 mb-2">
-                          {row.map((player, playerIndex) => (
-                            <div key={player} className="flex items-center gap-2">
-                              <span>{player}</span>
-                              <button
-                                onClick={() => removeFromBlacks(player)}
-                                className="bg-red-500 text-white text-xs px-0.5 py-px rounded hover:bg-red-600"
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Greens Team */}
-                  <div className="mb-8">
-                    <form onSubmit={addToGreens} className="flex gap-2">
-                      <select
-                        multiple
-                        value={greenPlayers}
-                        onChange={(e) => setGreenPlayers([...e.target.selectedOptions].map(o => o.value))}
-                        className="greens-select flex-1 p-2 border rounded h-32"
-                      >
-                        {players
-                          .filter(p => !greens.includes(p.name) && !blacks.includes(p.name))
-                          .sort((a, b) => a.name.localeCompare(b.name))
-                          .map(player => (
-                            <option key={player.name} value={player.name}>{player.name}</option>
-                          ))}
-                      </select>
-                      <button
-                        type="submit"
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                        disabled={greens.length >= 6}
-                      >
-                        Add to Greens
-                      </button>
-                    </form>
-                    <div className="mt-2">
-                      <p>Greens: {greens.length === 0 ? 'None' : ''}</p>
-                      {groupPlayersIntoRows(greens).map((row, rowIndex) => (
-                        <div key={rowIndex} className="flex gap-4 mb-2">
-                          {row.map((player, playerIndex) => (
-                            <div key={player} className="flex items-center gap-2">
-                              <span>{player}</span>
-                              <button
-                                onClick={() => removeFromGreens(player)}
-                                className="bg-red-500 text-white text-xs px-0.5 py-px rounded hover:bg-red-600"
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Log Match */}
-                  <div className="mb-8">
-                    <h2 className="text-xl font-semibold mb-2">Log Match</h2>
-                    <form onSubmit={logMatch}>
-                      <div className="mb-4">
-                        <label className="block mb-1">Result</label>
-                        <select
-                          value={result}
-                          onChange={(e) => {
-                            setResult(e.target.value);
-                            setBlacksScore(0);
-                            setGreensScore(0);
-                            setMotm('');
-                          }}
-                          className="w-full p-2 border rounded"
-                        >
-                          <option value="">Select result</option>
-                          <option value="blacks">Blacks Win</option>
-                          <option value="greens">Greens Win</option>
-                          <option value="draw">Draw</option>
-                        </select>
-                      </div>
-                      {result && (
-                        <div className="mb-4">
-                          <label className="block mb-1">Score (Blacks - Greens)</label>
-                          <div className="flex items-center gap-2">
-                            <select
-                              value={blacksScore}
-                              onChange={(e) => setBlacksScore(Number(e.target.value))}
-                              className="w-20 p-2 border rounded"
-                            >
-                              {scoreOptions.map(num => (
-                                <option key={num} value={num}>{num}</option>
-                              ))}
-                            </select>
-                            <span>-</span>
-                            <select
-                              value={greensScore}
-                              onChange={(e) => setGreensScore(Number(e.target.value))}
-                              className="w-20 p-2 border rounded"
-                            >
-                              {scoreOptions.map(num => (
-                                <option key={num} value={num}>{num}</option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-                      )}
-                      {result && (
-                        <div className="mb-4">
-                          <label className="block mb-1">Man of the Match</label>
-                          <select
-                            value={motm}
-                            onChange={(e) => setMotm(e.target.value)}
-                            className="w-full p-2 border rounded"
-                          >
-                            <option value="">None</option>
-                            {[...blacks, ...greens].sort().map(player => (
-                              <option key={player} value={player}>{player}</option>
-                            ))}
-                          </select>
-                        </div>
-                      )}
-                      <div className="flex gap-2">
-                        <button
-                          type="submit"
-                          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-gray-400"
-                          disabled={!isPasswordValid || isLoggingMatch}
-                        >
-                          {isLoggingMatch ? (
-                            <span className="flex items-center">
-                              <svg className="animate-spin h-5 w-5 mr-2" xmlns="http://w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Logging...
-                          </span>
-                          ) : (
-                            'Log Match'
-                          )}
-                        </button>
-                        <a
-                          href="./history.html"
-                          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                        >
-                          View Match History
-                        </a>
-                      </div>
-                    </form>
-                  </div>
-                </>
-              )}
-
-              {/* Recent Matches (Always Visible) */}
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-2">Recent Matches</h2>
-                {matches.length === 0 ? (
-                  <p>No matches logged yet.</p>
-                ) : (
-                  <div className="table-container">
-                    <table className="border-collapse">
-                      <thead>
-                        <tr className="bg-gray-200">
-                          <th className="border p-2">Date</th>
-                          <th className="border p-2">Result</th>
-                          <th className="border p-2">Score</th>
-                          <th className="border p-2">MOTM</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {matches.slice(-5).map((match, index) => (
-                          <tr key={index}>
-                            <td className="border p-2">{match.date}</td>
-                            <td className="border p-2">
-                              {match.result === 'blacks' ? 'Blacks Win' :
-                               match.result === 'greens' ? 'Greens Win' : 'Draw'}
-                            </td>
-                            <td className="border p-2">{match.score || 'N/A'}</td>
-                            <td className="border p-2">{match.motm || 'None'}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Right Column: Leaderboard, Buttons (Always Visible Leaderboard) */}
-            <div>
-              {/* Leaderboard */}
+              {/* Leaderboard (Always Visible) */}
               <div>
                 <h2 className="text-xl font-semibold mb-2">Leaderboard</h2>
                 <div className="table-container">
@@ -999,7 +1006,7 @@
                         <svg className="animate-spin h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
+                      </svg>
                         Resetting...
                       </span>
                     ) : (
@@ -1016,7 +1023,7 @@
                         <svg className="animate-spin h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
+                      </svg>
                         Syncing...
                       </span>
                     ) : (
