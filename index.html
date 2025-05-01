@@ -20,6 +20,17 @@
       background-color: #22c55e;
       color: #ffffff;
     }
+    /* Ensure both tables have the same width on mobile */
+    @media (max-width: 767px) {
+      .table-container {
+        width: 100%;
+        overflow-x: auto; /* Allow horizontal scrolling if needed */
+      }
+      .table-container table {
+        width: 100%;
+        min-width: 600px; /* Match the natural width of the leaderboard table on mobile */
+      }
+    }
   </style>
 </head>
 <body>
@@ -780,7 +791,7 @@
                         >
                           {isLoggingMatch ? (
                             <span className="flex items-center">
-                              <svg className="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <svg className="animate-spin h-5 w-5 mr-2" xmlns="http://w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
@@ -808,29 +819,31 @@
                 {matches.length === 0 ? (
                   <p>No matches logged yet.</p>
                 ) : (
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="bg-gray-200">
-                        <th className="border p-2">Date</th>
-                        <th className="border p-2">Result</th>
-                        <th className="border p-2">Score</th>
-                        <th className="border p-2">MOTM</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {matches.slice(-5).map((match, index) => (
-                        <tr key={index}>
-                          <td className="border p-2">{match.date}</td>
-                          <td className="border p-2">
-                            {match.result === 'blacks' ? 'Blacks Win' :
-                             match.result === 'greens' ? 'Greens Win' : 'Draw'}
-                          </td>
-                          <td className="border p-2">{match.score || 'N/A'}</td>
-                          <td className="border p-2">{match.motm || 'None'}</td>
+                  <div className="table-container">
+                    <table className="border-collapse">
+                      <thead>
+                        <tr className="bg-gray-200">
+                          <th className="border p-2">Date</th>
+                          <th className="border p-2">Result</th>
+                          <th className="border p-2">Score</th>
+                          <th className="border p-2">MOTM</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {matches.slice(-5).map((match, index) => (
+                          <tr key={index}>
+                            <td className="border p-2">{match.date}</td>
+                            <td className="border p-2">
+                              {match.result === 'blacks' ? 'Blacks Win' :
+                               match.result === 'greens' ? 'Greens Win' : 'Draw'}
+                            </td>
+                            <td className="border p-2">{match.score || 'N/A'}</td>
+                            <td className="border p-2">{match.motm || 'None'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
               </div>
             </div>
@@ -840,45 +853,47 @@
               {/* Leaderboard */}
               <div>
                 <h2 className="text-xl font-semibold mb-2">Leaderboard</h2>
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-gray-200">
-                      <th className="border p-2">Player</th>
-                      <th className="border p-2">Points</th>
-                      <th className="border p-2">Games Played</th>
-                      <th className="border p-2">Wins</th>
-                      <th className="border p-2">Draws</th>
-                      <th className="border p-2">Losses</th>
-                      <th className="border p-2">MOTM</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {leaderboard.map(player => (
-                      <tr
-                        key={player.name}
-                        className={
-                          player.points === firstPoints && firstPoints >= 2 ? 'bg-yellow-200' :
-                          player.points === secondPoints && secondPoints >= 2 ? 'bg-gray-300' :
-                          player.points === thirdPoints && thirdPoints >= 2 ? 'bg-orange-200' : ''
-                        }
-                      >
-                        <td className="border p-2">
-                          {player.points === firstPoints && firstPoints >= 2 ? `🥇 ${player.name}` :
-                           player.points === secondPoints && secondPoints >= 2 ? `🥈 ${player.name}` :
-                           player.points === thirdPoints && thirdPoints >= 2 ? `🥉 ${player.name}` : player.name}
-                        </td>
-                        <td className="border p-2">{player.points}</td>
-                        <td className="border p-2">{player.games}</td>
-                        <td className="border p-2">{player.wins}</td>
-                        <td className="border p-2">{player.draws}</td>
-                        <td className="border p-2">{player.losses}</td>
-                        <td className="border p-2">
-                          {player.motmAwards === maxMotmAwards && player.motmAwards > 0 ? `🏆 ${player.motmAwards}` : player.motmAwards}
-                        </td>
+                <div className="table-container">
+                  <table className="border-collapse">
+                    <thead>
+                      <tr className="bg-gray-200">
+                        <th className="border p-2">Player</th>
+                        <th className="border p-2">Points</th>
+                        <th className="border p-2">Games Played</th>
+                        <th className="border p-2">Wins</th>
+                        <th className="border p-2">Draws</th>
+                        <th className="border p-2">Losses</th>
+                        <th className="border p-2">MOTM</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {leaderboard.map(player => (
+                        <tr
+                          key={player.name}
+                          className={
+                            player.points === firstPoints && firstPoints >= 2 ? 'bg-yellow-200' :
+                            player.points === secondPoints && secondPoints >= 2 ? 'bg-gray-300' :
+                            player.points === thirdPoints && thirdPoints >= 2 ? 'bg-orange-200' : ''
+                          }
+                        >
+                          <td className="border p-2">
+                            {player.points === firstPoints && firstPoints >= 2 ? `🥇 ${player.name}` :
+                             player.points === secondPoints && secondPoints >= 2 ? `🥈 ${player.name}` :
+                             player.points === thirdPoints && thirdPoints >= 2 ? `🥉 ${player.name}` : player.name}
+                          </td>
+                          <td className="border p-2">{player.points}</td>
+                          <td className="border p-2">{player.games}</td>
+                          <td className="border p-2">{player.wins}</td>
+                          <td className="border p-2">{player.draws}</td>
+                          <td className="border p-2">{player.losses}</td>
+                          <td className="border p-2">
+                            {player.motmAwards === maxMotmAwards && player.motmAwards > 0 ? `🏆 ${player.motmAwards}` : player.motmAwards}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               {/* Export, Import, Reset, and Sync Buttons (Visible only when updating scores) */}
