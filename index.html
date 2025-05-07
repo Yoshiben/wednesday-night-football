@@ -683,7 +683,8 @@
       // Calculate leaderboard
       const leaderboard = [...players].sort((a, b) => {
         if (b.points !== a.points) return b.points - a.points; // Primary sort by points (descending)
-        return b.motmAwards - a.motmAwards; // Secondary sort by MOTM awards (descending)
+        if (b.motmAwards !== a.motmAwards) return b.motmAwards - a.motmAwards; // Secondary sort by MOTM awards (descending)
+        return a.games - b.games; // Tertiary sort by games played (ascending)
       });
       const maxPoints = players.length > 0 ? Math.max(...players.map(p => p.points)) : 0;
       const maxMotmAwards = players.length > 0 ? Math.max(...players.map(p => p.motmAwards)) : 0;
@@ -987,7 +988,7 @@
                              player.points === thirdPoints && thirdPoints >= 2 ? `🥉 ${player.name}` : player.name}
                           </td>
                           <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.points}</td>
-                          <td className="border p-2 border-gray-303 dark:border-gray-500 text-black dark:text-white">{player.games}</td>
+                          <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.games}</td>
                           <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.wins}</td>
                           <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.draws}</td>
                           <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.losses}</td>
