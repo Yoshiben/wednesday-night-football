@@ -24,6 +24,7 @@ const defaultPlayers = [
   "Sohrob Rostampour", 
   "Tom Kelton", 
   "Tom Wright", 
+  "Trevor Jones",
   "Will Allsopp",
   "Zach Murphy",
   "Zak Waddington"
