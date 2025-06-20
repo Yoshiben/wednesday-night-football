@@ -37,6 +37,15 @@
       const [lastSyncTime, setLastSyncTime] = useState(0);
       const [isSyncing, setIsSyncing] = useState(false);
 
+      // Format date to DD/MM/YYYY
+      const formatDate = (dateStr) => {
+        const date = new Date(dateStr);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      };
+
       // Load initial data (prioritize localStorage, then sync with data.json)
       useEffect(() => {
         const loadData = async () => {
@@ -145,7 +154,7 @@
                 <tbody>
                   {matches.slice().reverse().map((match, index) => (
                     <tr key={index}>
-                      <td className="border p-2">{match.date}</td>
+                      <td className="border p-2">{formatDate(match.date)}</td>
                       <td className="border p-2">{match.blacks.join(', ')}</td>
                       <td className="border p-2">{match.greens.join(', ')}</td>
                       <td className="border p-2">
