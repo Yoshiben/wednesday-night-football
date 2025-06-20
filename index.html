@@ -882,7 +882,7 @@
                         <div className="flex items-center gap-2">
                           <select
                             value={blacksScore}
-                            onChange={(e) => setBlacksScore(Number(e.target.value))}
+                            onChange={(e) => setBlacksScore(Number(e.target.value)))
                             className="w-20 p-2 border rounded bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
                           >
                             {scoreOptions.map(num => (
@@ -892,7 +892,7 @@
                           <span className="text-black dark:text-white">-</span>
                           <select
                             value={greensScore}
-                            onChange={(e) => setGreensScore(Number(e.target.value))}
+                            onChange={(e) => setGreensScore(Number(e.target.value)))
                             className="w-20 p-2 border rounded bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
                           >
                             {scoreOptions.map(num => (
@@ -907,7 +907,7 @@
                         <label className="block mb-1 text-black dark:text-white">Man of the Match</label>
                         <select
                           value={motm}
-                          onChange={(e) => setMotm(e.target.value)}
+                          onChange={(e) => setMotm(e.target.value))
                           className="w-full p-2 border rounded bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
                         >
                           <option value="">None</option>
@@ -1006,34 +1006,42 @@
                         <th className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">Wins</th>
                         <th className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">Draws</th>
                         <th className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">Losses</th>
+                        <th className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">Win %</th>
+                        <th className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">Negative Win %</th>
                         <th className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">MOTM</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {leaderboard.map(player => (
-                        <tr
-                          key={player.name}
-                          className={
-                            player.points === firstPoints && firstPoints >= 2 ? 'bg-yellow-200 dark:bg-yellow-700' :
-                            player.points === secondPoints && secondPoints >= 2 ? 'bg-gray-300 dark:bg-gray-500' :
-                            player.points === thirdPoints && thirdPoints >= 2 ? 'bg-orange-200 dark:bg-orange-700' : ''
-                          }
-                        >
-                          <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">
-                            {player.points === firstPoints && firstPoints >= 2 ? `🥇 ${player.name}` :
-                             player.points === secondPoints && secondPoints >= 2 ? `🥈 ${player.name}` :
-                             player.points === thirdPoints && thirdPoints >= 2 ? `🥉 ${player.name}` : player.name}
-                          </td>
-                          <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.points}</td>
-                          <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.games}</td>
-                          <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.wins}</td>
-                          <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.draws}</td>
-                          <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.losses}</td>
-                          <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">
-                            {player.motmAwards === maxMotmAwards && player.motmAwards > 0 ? `🏆 ${player.motmAwards}` : player.motmAwards}
-                          </td>
-                        </tr>
-                      ))}
+                      {leaderboard.map(player => {
+                        const winPercentage = player.games > 0 ? ((player.wins / player.games) * 100).toFixed(1) : 0;
+                        const negativeWinPercentage = player.games > 0 ? ((1 - (player.wins / player.games)) * 100).toFixed(1) : 0;
+                        return (
+                          <tr
+                            key={player.name}
+                            className={
+                              player.points === firstPoints && firstPoints >= 2 ? 'bg-yellow-200 dark:bg-yellow-700' :
+                              player.points === secondPoints && secondPoints >= 2 ? 'bg-gray-300 dark:bg-gray-500' :
+                              player.points === thirdPoints && thirdPoints >= 2 ? 'bg-orange-200 dark:bg-orange-700' : ''
+                            }
+                          >
+                            <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">
+                              {player.points === firstPoints && firstPoints >= 2 ? `🥇 ${player.name}` :
+                               player.points === secondPoints && secondPoints >= 2 ? `🥈 ${player.name}` :
+                               player.points === thirdPoints && thirdPoints >= 2 ? `🥉 ${player.name}` : player.name}
+                            </td>
+                            <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.points}</td>
+                            <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.games}</td>
+                            <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.wins}</td>
+                            <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.draws}</td>
+                            <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.losses}</td>
+                            <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{winPercentage}%</td>
+                            <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{negativeWinPercentage}%</td>
+                            <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">
+                              {player.motmAwards === maxMotmAwards && player.motmAwards > 0 ? `🏆 ${player.motmAwards}` : player.motmAwards}
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
