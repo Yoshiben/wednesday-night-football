@@ -464,11 +464,27 @@
         return rows;
       };
 
-      // Format date to DD/MM/YYYY
+      // Format date to DD/MM/YYYY with improved parsing
       const formatDate = (dateStr) => {
         if (!dateStr) return 'N/A';
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return dateStr; // Fallback to original string if invalid
+        let date;
+        // Try parsing as DD/MM/YYYY or MM/DD/YYYY if needed
+        if (typeof dateStr === 'string' && dateStr.includes('/')) {
+          const parts = dateStr.split('/');
+          if (parts.length === 3) {
+            // Assume DD/MM/YYYY (UK format) as primary, adjust if invalid
+            date = new Date(parts[2], parts[1] - 1, parts[0]); // year, month-1, day
+            if (isNaN(date.getTime())) {
+              // Try MM/DD/YYYY (US format) as fallback
+              date = new Date(parts[2], parts[0] - 1, parts[1]);
+            }
+          } else {
+            date = new Date(dateStr); // Fallback to default parsing
+          }
+        } else {
+          date = new Date(dateStr); // Handle ISO or other formats
+        }
+        if (isNaN(date.getTime())) return dateStr; // Fallback to original if still invalid
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = date.getFullYear();
