@@ -155,6 +155,7 @@
       const [lastSyncTime, setLastSyncTime] = useState(0);
       const [isUpdatingScores, setIsUpdatingScores] = useState(false);
       const [darkMode, setDarkMode] = useState(false);
+      const [customDate, setCustomDate] = useState(new Date().toISOString().split('T')[0]); // Default to today in YYYY-MM-DD
 
       // Load dark mode preference from localStorage
       useEffect(() => {
@@ -463,10 +464,19 @@
         return rows;
       };
 
+      // Format date to DD/MM/YYYY
+      const formatDate = (dateStr) => {
+        const date = new Date(dateStr);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      };
+
       // Log a match and trigger Vercel API
       const logMatch = async (e) => {
         e.preventDefault();
-        console.log('Logging match:', { blacks, greens, result, blacksScore, greensScore, motm });
+        console.log('Logging match:', { blacks, greens, result, blacksScore, greensScore, motm, customDate });
 
         // Validate teams and result
         if (blacks.length === 0 || greens.length === 0 || !result) {
@@ -563,7 +573,7 @@
         }
 
         const score = `${blacksScore}-${greensScore}`;
-        const newMatch = { blacks, greens, result, score, motm, date: new Date().toLocaleDateString() };
+        const newMatch = { blacks, greens, result, score, motm, date: formatDate(customDate) };
         const updatedMatches = [...matches, newMatch];
 
         // Update state and localStorage immediately
@@ -822,6 +832,15 @@
                   <h2 className="text-xl font-semibold mb-2 text-black dark:text-white">Log Match</h2>
                   <form onSubmit={logMatch}>
                     <div className="mb-4">
+                      <label className="block mb-1 text-black dark:text-white">Date</label>
+                      <input
+                        type="date"
+                        value={customDate}
+                        onChange={(e) => setCustomDate(e.target.value)}
+                        className="w-full p-2 border rounded bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
+                      />
+                    </div>
+                    <div className="mb-4">
                       <label className="block mb-1 text-black dark:text-white">Result</label>
                       <select
                         value={result}
@@ -921,7 +940,7 @@
                         <tbody>
                           {matches.slice(-5).map((match, index) => (
                             <tr key={index}>
-                              <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{match.date}</td>
+                              <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{formatDate(match.date)}</td>
                               <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">
                                 {match.result === 'blacks' ? 'Blacks Win' :
                                  match.result === 'greens' ? 'Greens Win' : 'Draw'}
