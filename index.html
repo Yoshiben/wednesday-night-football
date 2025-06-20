@@ -1007,14 +1007,12 @@
                         <th className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">Draws</th>
                         <th className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">Losses</th>
                         <th className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">Win %</th>
-                        <th className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">Negative Win %</th>
                         <th className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">MOTM</th>
                       </tr>
                     </thead>
                     <tbody>
                       {leaderboard.map(player => {
-                        const winPercentage = player.games > 0 ? ((player.wins / player.games) * 100).toFixed(1) : 0;
-                        const negativeWinPercentage = player.games > 0 ? ((1 - (player.wins / player.games)) * 100).toFixed(1) : 0;
+                        const winPercentage = player.games > 0 ? ((player.wins / player.games) * 100).toFixed(0) : 0;
                         return (
                           <tr
                             key={player.name}
@@ -1035,7 +1033,6 @@
                             <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.draws}</td>
                             <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{player.losses}</td>
                             <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{winPercentage}%</td>
-                            <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">{negativeWinPercentage}%</td>
                             <td className="border p-2 border-gray-300 dark:border-gray-500 text-black dark:text-white">
                               {player.motmAwards === maxMotmAwards && player.motmAwards > 0 ? `🏆 ${player.motmAwards}` : player.motmAwards}
                             </td>
