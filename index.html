@@ -882,7 +882,7 @@
                         <div className="flex items-center gap-2">
                           <select
                             value={blacksScore}
-                            onChange={(e) => setBlacksScore(Number(e.target.value))}  {/* Fixed with closing parenthesis */}
+                            onChange={(e) => setBlacksScore(Number(e.target.value))}
                             className="w-20 p-2 border rounded bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
                           >
                             {scoreOptions.map(num => (
@@ -892,7 +892,7 @@
                           <span className="text-black dark:text-white">-</span>
                           <select
                             value={greensScore}
-                            onChange={(e) => setGreensScore(Number(e.target.value))}  {/* Fixed with closing parenthesis */}
+                            onChange={(e) => setGreensScore(Number(e.target.value))}
                             className="w-20 p-2 border rounded bg-white dark:bg-gray-700 text-black dark:text-white border-gray-300 dark:border-gray-600"
                           >
                             {scoreOptions.map(num => (
@@ -1195,7 +1195,7 @@
       }
     }
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
+    const root = ReactDOM.createRoot(document.getElementId('root'));
     root.render(
       <ErrorBoundary>
         <App />
