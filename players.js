@@ -4,6 +4,7 @@ const defaultPlayers = [
   "Ben Attle", 
   "Ben Franks",
   "Bradley Travis", 
+  "Cameron Dover",
   "Chad Ogden", 
   "Craig Ingham", 
   "Danny Minshull", 
